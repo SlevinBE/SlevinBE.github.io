@@ -1,115 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
 
-<!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  <title>Automated Gradle project deployment to Sonatype OSS Repository - Yennick Trevels</title>
-  <meta name="author" content="Yennick Trevels">
-
+  <title><![CDATA[Category: Gradle | Yennick Trevels]]></title>
+  <link href="http://www.yennicktrevels.com/blog/categories/gradle/atom.xml" rel="self"/>
+  <link href="http://www.yennicktrevels.com/"/>
+  <updated>2013-10-16T23:12:06+02:00</updated>
+  <id>http://www.yennicktrevels.com/</id>
+  <author>
+    <name><![CDATA[Yennick Trevels]]></name>
     
-    <meta name="description" content="Yennick is a Technical Business Consultant based in Belgium, who provides technical advice and implements software solutions based on best practices.">
-    
-    <meta name="keywords" content="Gradle Sonatype OSS">
-
-  <!-- http://t.co/dKP3o1e -->
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
 
   
-  <link rel="canonical" href="http://www.yennicktrevels.com/blog/2013/10/11/automated-gradle-project-deployment-to-sonatype-oss-repository">
-  <link href="/favicon.png" rel="icon">
-  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Gentium+Book+Basic:400,70">
-<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:400,700">
-<link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.min.css">
-
-<script type="text/javascript" src="/javascripts/libs/jquery.min.js"></script>
-<script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
-
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="Yennick Trevels" type="application/atom+xml">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-44891800-1']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
-
-</head>
-
-
-<body>
-    <div class="container site-wrapper">
-        <!-- Site name and menu section -->
-        <div class="container site-wrapper topNavSection">
-            <div class="site-inner-wrapper">
-                <div class="siteName">
-            Yennick Trevels
-</div>
-
-
-
-                <div class="main-menu">
-                    <ul class="main-menu-navigation">
-    <li><a href="/">Home</a></li>
-    <li><a href="/blog">Blog</a></li>
-    <li><a href="/contact.html">Contact</a></li>
-</ul>
-
-
-                </div>
-            </div>
-        </div>
-
-        <!-- header -->
-<div class="container site-wrapper smallHeader">
-    <div class="site-inner-wrapper">
-        <p class="headerText">
-            BLOG
-        </p>
-    </div>
-</div>
-
-<div class="container site-wrapper">
-    <div class="site-inner-wrapper">
-        <div>
-        <article class="hentry" role="article">
-          
-  <header>
-    
-      <h1 class="entry-title">Automated Gradle Project Deployment to Sonatype OSS Repository</h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-10-11T21:53:00+02:00" pubdate data-updated="true">Oct 11<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-<div class="entry-content"><p>This post will walk you through the steps to deploy your gradle project to the Sonatype OSS staging repository.</p>
+  <entry>
+    <title type="html"><![CDATA[Automated Gradle project deployment to Sonatype OSS Repository]]></title>
+    <link href="http://www.yennicktrevels.com/blog/2013/10/11/automated-gradle-project-deployment-to-sonatype-oss-repository/"/>
+    <updated>2013-10-11T21:53:00+02:00</updated>
+    <id>http://www.yennicktrevels.com/blog/2013/10/11/automated-gradle-project-deployment-to-sonatype-oss-repository</id>
+    <content type="html"><![CDATA[<p>This post will walk you through the steps to deploy your gradle project to the Sonatype OSS staging repository.</p>
 
 <!--more-->
 
@@ -369,134 +278,7 @@ sub 2048R/F66623G0 2011-10-16
 
 <h3 id="deployment-to-the-sonatype-oss-repository">DEPLOYMENT TO THE SONATYPE OSS REPOSITORY</h3>
 <p>Once you&rsquo;ve done all the previous steps in this post you can deploy your project with just one single command: &ldquo;gradle uploadArchives&rdquo;</p>
-</div>
-
-
-          <footer>
-            <p class="meta">
-              
+]]></content>
+  </entry>
   
-
-<span class="byline author vcard">Posted by <span class="fn">Yennick Trevels</span></span>
-
-              
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-10-11T21:53:00+02:00" pubdate data-updated="true">Oct 11<span>th</span>, 2013</time>
-              
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/gradle/'>Gradle</a>
-  
-</span>
-
-
-            </p>
-            
-              <div class="sharing">
-  
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://www.yennicktrevels.com/blog/2013/10/11/automated-gradle-project-deployment-to-sonatype-oss-repository/" data-via="SlevinBE" data-counturl="http://www.yennicktrevels.com/blog/2013/10/11/automated-gradle-project-deployment-to-sonatype-oss-repository/" >Tweet</a>
-  
-  
-  
-</div>
-
-            
-            <p class="meta">
-              
-              
-                <a class="basic-alignment right" href="/blog/2013/10/15/javafx-structuring-your-application-overview/" title="Next Post: JavaFx: Structuring your Application - Overview">JavaFx: Structuring your Application - Overview &raquo;</a>
-              
-            </p>
-          </footer>
-        </article>
-        
-        
-        </div>
-        
-        <aside class="sidebar">
-          
-            <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2013/10/15/javafx-structuring-your-application-service-and-application-state-layer/">JavaFx: Structuring your Application - Service and Application State layer</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/15/javafx-structuring-your-application-application-logic-layer/">JavaFx: Structuring your Application - Application Logic Layer</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/15/javafx-structuring-your-application-view-layer/">JavaFx: Structuring your Application - View Layer</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/15/javafx-structuring-your-application-overview/">JavaFx: Structuring your Application - Overview</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/11/automated-gradle-project-deployment-to-sonatype-oss-repository/">Automated Gradle project deployment to Sonatype OSS Repository</a>
-      </li>
-    
-  </ul>
-</section>
-
-          
-        </aside>
-        
-    </div>
-</div>
-
-<div class="newsletter-signup-section">
-    <div class="site-inner-wrapper">
-        <!-- Mailchimp newsletter signup form -->
-        <div id="mc_embed_signup">
-            <form action="http://twitter.us7.list-manage.com/subscribe/post?u=02f28b618c351eec5f12806b3&amp;id=a42d48b8cd" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
-                <label for="mce-EMAIL">Follow my content</label>
-                <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required>
-                <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
-            </form>
-        </div>
-    </div>
-</div>
-
-        <!-- footer -->
-        <div class="container site-wrapper">
-            <div class="site-inner-wrapper footer-wrapper">
-                <div class="footer">
-    <ul class="socialLinks">
-        <li>
-            <a href="https://twitter.com/SlevinBE" alt="twitter link"><img src="/images/twitter-icon.png" /></a>
-        </li>
-        <li>
-            <a href="http://www.linkedin.com/in/yennicktrevels" alt="linkedin link"><img src="/images/linkedin-icon.png" /></a>
-        </li>
-        <li>
-            <a href="https://github.com/SlevinBE" alt="github link"><img src="/images/github-icon.png" /></a>
-        </li>
-    </ul>
-
-    <p class="copyright">
-        © Copyright 2013 Yennick Trevels. All rights reserved.
-        Powered by <a href="http://octopress.org">Octopress</a>
-    </p>
-</div>
-
-
-            </div>
-        </div>
-    </div>
-</body>
-</html>
+</feed>

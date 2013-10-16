@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Yennick Trevels]]></title>
-  <link href="http://www.yennicktrevels.com/atom.xml" rel="self"/>
+  <title><![CDATA[Category: JavaFx | Yennick Trevels]]></title>
+  <link href="http://www.yennicktrevels.com/blog/categories/javafx/atom.xml" rel="self"/>
   <link href="http://www.yennicktrevels.com/"/>
   <updated>2013-10-16T23:12:06+02:00</updated>
   <id>http://www.yennicktrevels.com/</id>
@@ -771,7 +771,7 @@ This serie of articles will try to remedy that by showing you one of many ways t
 
 <p>The diagram below shows the different components and layers in my architecture. The arrows indicate the dependencies.</p>
 
-<p><img src="http://www.yennicktrevels.com/images/posts/javafx-structure-overview.png" /></p>
+<p><img src="/images/posts/javafx-structure-overview.png"></p>
 
 <p><strong>View:</strong> This is where the JavaFx components are used to build the UI.<br />
 <strong>Mediator:</strong> The mediator facilitates the communication between the view and the application logic layer. This is why it&rsquo;s both included in the view layer as the application logic layer. This layer should not contain application logic, it&rsquo;s just a postman who receives calls from the view and delegates them to the application logic layer and vise versa.<br />
@@ -781,7 +781,7 @@ This serie of articles will try to remedy that by showing you one of many ways t
 
 <p>The diagram below shows a sample flow of an application. In this case the user clicked on a button to delete a contact in a list.</p>
 
-<p><img src="http://www.yennicktrevels.com/images/posts/javafx-structure-flow.png" /></p>
+<p><img src="/images/posts/javafx-structure-flow.png"></p>
 
 <ol>
   <li>The view asks the mediator to delete the item by calling the deleteContact(contact) method on the IContactListMediator interface.</li>
@@ -1115,274 +1115,6 @@ Only for the Commands I didn&rsquo;t create interfaces because they wouldn&rsquo
 <p>In this post I gave a broad overview of the structure and explained how dependency injection fits into this.<br />
 In the following posts I will go into more detail for each layer and give some best practices.<br />
 You can find the full sample application here: <a href="https://github.com/SlevinBE/JavaFx-structure-demo">https://github.com/SlevinBE/JavaFx-structure-demo</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Automated Gradle project deployment to Sonatype OSS Repository]]></title>
-    <link href="http://www.yennicktrevels.com/blog/2013/10/11/automated-gradle-project-deployment-to-sonatype-oss-repository/"/>
-    <updated>2013-10-11T21:53:00+02:00</updated>
-    <id>http://www.yennicktrevels.com/blog/2013/10/11/automated-gradle-project-deployment-to-sonatype-oss-repository</id>
-    <content type="html"><![CDATA[<p>This post will walk you through the steps to deploy your gradle project to the Sonatype OSS staging repository.</p>
-
-<!--more-->
-
-<h3 id="prerequisites">PREREQUISITES</h3>
-
-<ul>
-  <li>Minimum Gradle 1.0 milestone 5</li>
-  <li>Gpg4zin, you can find the installer on this website: http://www.gpg4win.org/</li>
-</ul>
-
-<h3 id="configuring-your-buildgradle-file">CONFIGURING YOUR BUILD.GRADLE FILE</h3>
-<p>First you&rsquo;ll need to configure your build script (build.gradle file). A full working build script of my GradleFx project can be found here:<br />
-https://github.com/GradleFx/GradleFx/blob/develop/build.gradle</p>
-
-<p>These are the steps:</p>
-
-<p>Apply the maven and signing plugins. The signing plugin will sign your jar and pom files, which is required for deployment to the Sonatype OSS repository.</p>
-
-<div><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
-<a href="#n2" name="n2">2</a>
-</pre></td>
-  <td class="code"><pre>apply <span class="key">plugin</span>: <span class="string"><span class="delimiter">'</span><span class="content">maven</span><span class="delimiter">'</span></span>
-apply <span class="key">plugin</span>: <span class="string"><span class="delimiter">'</span><span class="content">signing</span><span class="delimiter">'</span></span>
-</pre></td>
-</tr></table>
-</div>
-
-<p>Specify the group and version of your project:</p>
-
-<div><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
-<a href="#n2" name="n2">2</a>
-</pre></td>
-  <td class="code"><pre>group = <span class="string"><span class="delimiter">'</span><span class="content">org.gradlefx</span><span class="delimiter">'</span></span>
-version = <span class="string"><span class="delimiter">'</span><span class="content">0.3.1</span><span class="delimiter">'</span></span>
-</pre></td>
-</tr></table>
-</div>
-
-<p>Define tasks for source and javadoc jar generation. These jars are also required for Sonatype:</p>
-
-<div><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
-<a href="#n2" name="n2">2</a>
-<a href="#n3" name="n3">3</a>
-<a href="#n4" name="n4">4</a>
-<a href="#n5" name="n5">5</a>
-<a href="#n6" name="n6">6</a>
-<a href="#n7" name="n7">7</a>
-<a href="#n8" name="n8">8</a>
-<a href="#n9" name="n9">9</a>
-</pre></td>
-  <td class="code"><pre>task javadocJar(<span class="key">type</span>: Jar, <span class="key">dependsOn</span>: javadoc) {
-    classifier = <span class="string"><span class="delimiter">'</span><span class="content">javadoc</span><span class="delimiter">'</span></span>
-    from <span class="string"><span class="delimiter">'</span><span class="content">build/docs/javadoc</span><span class="delimiter">'</span></span>
-}
-
-task sourcesJar(<span class="key">type</span>: Jar) {
-    from sourceSets.main.allSource
-    classifier = <span class="string"><span class="delimiter">'</span><span class="content">sources</span><span class="delimiter">'</span></span>
-}
-</pre></td>
-</tr></table>
-</div>
-
-<p>Specify your artifacts:</p>
-
-<div><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
-<a href="#n2" name="n2">2</a>
-<a href="#n3" name="n3">3</a>
-<a href="#n4" name="n4">4</a>
-<a href="#n5" name="n5">5</a>
-<a href="#n6" name="n6">6</a>
-</pre></td>
-  <td class="code"><pre>artifacts {
-    archives jar
-
-    archives javadocJar
-    archives sourcesJar
-}
-</pre></td>
-</tr></table>
-</div>
-
-<p>Configure the signing task by specifying which artifacts to sign, in this case all the artifacts in the archives configuration. This will not yet include the pom file, which will be signed later.</p>
-
-<div><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
-<a href="#n2" name="n2">2</a>
-<a href="#n3" name="n3">3</a>
-</pre></td>
-  <td class="code"><pre>signing {
-    sign configurations.archives
-}
-</pre></td>
-</tr></table>
-</div>
-
-<p>Then we need to configure the generated pom file, sign the pom file and configure the Sonatype OSS staging repository.<br />
-The <strong>&lsquo;beforeDeployment&rsquo;</strong> line will sign the pom file right before the artifacts are deployed to the Sonatype OSS repository.<br />
-The <strong>&lsquo;repository&rsquo;</strong> part configures the Sonatype OSS staging repository. Notice the sonatypeUsername and sonatypePassword variables, these are property variables to which I&rsquo;ll come back to later in this post.<br />
-The <strong>&lsquo;pom.project&rsquo;</strong> section configures the generated pom files, you need to specify all this information because it&rsquo;s required for the Sonatype repository (and Maven Central).</p>
-
-<div><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
-<a href="#n2" name="n2">2</a>
-<a href="#n3" name="n3">3</a>
-<a href="#n4" name="n4">4</a>
-<a href="#n5" name="n5">5</a>
-<a href="#n6" name="n6">6</a>
-<a href="#n7" name="n7">7</a>
-<a href="#n8" name="n8">8</a>
-<a href="#n9" name="n9">9</a>
-<strong><a href="#n10" name="n10">10</a></strong>
-<a href="#n11" name="n11">11</a>
-<a href="#n12" name="n12">12</a>
-<a href="#n13" name="n13">13</a>
-<a href="#n14" name="n14">14</a>
-<a href="#n15" name="n15">15</a>
-<a href="#n16" name="n16">16</a>
-<a href="#n17" name="n17">17</a>
-<a href="#n18" name="n18">18</a>
-<a href="#n19" name="n19">19</a>
-<strong><a href="#n20" name="n20">20</a></strong>
-<a href="#n21" name="n21">21</a>
-<a href="#n22" name="n22">22</a>
-<a href="#n23" name="n23">23</a>
-<a href="#n24" name="n24">24</a>
-<a href="#n25" name="n25">25</a>
-<a href="#n26" name="n26">26</a>
-<a href="#n27" name="n27">27</a>
-<a href="#n28" name="n28">28</a>
-<a href="#n29" name="n29">29</a>
-<strong><a href="#n30" name="n30">30</a></strong>
-<a href="#n31" name="n31">31</a>
-<a href="#n32" name="n32">32</a>
-<a href="#n33" name="n33">33</a>
-<a href="#n34" name="n34">34</a>
-<a href="#n35" name="n35">35</a>
-<a href="#n36" name="n36">36</a>
-<a href="#n37" name="n37">37</a>
-<a href="#n38" name="n38">38</a>
-<a href="#n39" name="n39">39</a>
-<strong><a href="#n40" name="n40">40</a></strong>
-<a href="#n41" name="n41">41</a>
-<a href="#n42" name="n42">42</a>
-<a href="#n43" name="n43">43</a>
-</pre></td>
-  <td class="code"><pre>uploadArchives {
-    repositories {
-        mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -&gt; signing.signPom(deployment) }
-
-            repository(<span class="key">url</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">https://oss.sonatype.org/service/local/staging/deploy/maven2/</span><span class="delimiter">&quot;</span></span>) {
-              authentication(<span class="key">userName</span>: sonatypeUsername, <span class="key">password</span>: sonatypePassword)
-            }
-
-            pom.project {
-               name <span class="string"><span class="delimiter">'</span><span class="content">GradleFx</span><span class="delimiter">'</span></span>
-               packaging <span class="string"><span class="delimiter">'</span><span class="content">jar</span><span class="delimiter">'</span></span>
-               description <span class="string"><span class="delimiter">'</span><span class="content">GradleFx is a Gradle plugin for building Flex and Actionscript applications</span><span class="delimiter">'</span></span>
-               url <span class="string"><span class="delimiter">'</span><span class="content">http://gradlefx.github.com/</span><span class="delimiter">'</span></span>
-
-               scm {
-                   url <span class="string"><span class="delimiter">'</span><span class="content">scm:git@github.com:GradleFx/GradleFx.git</span><span class="delimiter">'</span></span>
-                   connection <span class="string"><span class="delimiter">'</span><span class="content">scm:git@github.com:GradleFx/GradleFx.git</span><span class="delimiter">'</span></span>
-                   developerConnection <span class="string"><span class="delimiter">'</span><span class="content">scm:git@github.com:GradleFx/GradleFx.git</span><span class="delimiter">'</span></span>
-               }
-
-               licenses {
-                   license {
-                       name <span class="string"><span class="delimiter">'</span><span class="content">The Apache Software License, Version 2.0</span><span class="delimiter">'</span></span>
-                       url <span class="string"><span class="delimiter">'</span><span class="content">http://www.apache.org/licenses/LICENSE-2.0.txt</span><span class="delimiter">'</span></span>
-                       distribution <span class="string"><span class="delimiter">'</span><span class="content">repo</span><span class="delimiter">'</span></span>
-                   }
-               }
-
-               developers {
-                   developer {
-                       id <span class="string"><span class="delimiter">'</span><span class="content">yennicktrevels</span><span class="delimiter">'</span></span>
-                       name <span class="string"><span class="delimiter">'</span><span class="content">Yennick Trevels</span><span class="delimiter">'</span></span>
-                   }
-                   developer {
-                       id <span class="string"><span class="delimiter">'</span><span class="content">stevendick</span><span class="delimiter">'</span></span>
-                       name <span class="string"><span class="delimiter">'</span><span class="content">Steven Dick</span><span class="delimiter">'</span></span>
-                   }
-               }
-           }
-        }
-    }
-}
-</pre></td>
-</tr></table>
-</div>
-
-<p>That&rsquo;s it for the configuration of your build script.</p>
-
-<h3 id="initial-setup">INITIAL SETUP</h3>
-<p>There are a couple of thing you need to do before you can run the build automatically, like:
-Register your project at Sonatype
-Create a public key pair to sign your jar/pom files
-Create a gradle properties file</p>
-
-<h4 id="register-your-project-at-sonatype">Register your project at Sonatype</h4>
-
-<p>First you&rsquo;ll need to register your project at sonatype. Follow the &ldquo;2. Sign Up&rdquo; and &ldquo;3. Create a JIRA ticket&rdquo; sections on this page: https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide</p>
-
-<h4 id="create-a-public-key-pair">Create a public key pair</h4>
-
-<p>A public key pair is needed to sign your jar/pom files. To generate this we need to dive into command line. Follow the &ldquo;Generate a key pair&rdquo; and &ldquo;Distributing your public key&rdquo; sections on this page: https://docs.sonatype.org/display/Repository/How+To+Generate+PGP+Signatures+With+Maven
-This will generate a key that will be stored on your computer and on sks-keyservers.net. Remember the password because there is no way to reset or restore it when you forget it.</p>
-
-<h4 id="create-a-gradle-properties-file">Create a gradle properties file</h4>
-
-<p>Now we&rsquo;ll have to create a gradle.properties file which will contain the public key and sonatype login information.<br />
-Because this is sensitive information it&rsquo;s best to store this file in your &ldquo;.gradle&rdquo; directory (e.g. D:\Users\MyUsername.gradle) and not under your project.<br />
-This properties file is used by your gradle build script. The signing.* properties are used and defined by the signing task, the sonatypeUsername and sonatypePassword properties are the variables we defined earlier in our build script.  </p>
-
-<p>So first create the &ldquo;gradle.properties&rdquo; file under D:\Users\MyUsername.gradle<br />
-Then add the following properties to the file and change their values:</p>
-
-<div><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
-<a href="#n2" name="n2">2</a>
-<a href="#n3" name="n3">3</a>
-<a href="#n4" name="n4">4</a>
-<a href="#n5" name="n5">5</a>
-<a href="#n6" name="n6">6</a>
-</pre></td>
-  <td class="code"><pre>signing.keyId=A5DOA652
-signing.password=YourPublicKeyPassword
-signing.secretKeyRingFile=D:/Users/MyUsername/AppData/Roaming/gnupg/secring.gpg
-
-sonatypeUsername=YourSonatypeJiraUsername
-sonatypePassword=YourSonatypeJiraPassword
-</pre></td>
-</tr></table>
-</div>
-
-<p>the signing.keyId property is the public key id, you can list your keys with the &ldquo;gpg &ndash;list-keys&rdquo; command. With this command you&rsquo;ll get an output like this:</p>
-
-<div><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
-<a href="#n2" name="n2">2</a>
-<a href="#n3" name="n3">3</a>
-</pre></td>
-  <td class="code"><pre>pub 2048R/A5DOA652 2011-10-16
-uid MyUid
-sub 2048R/F66623G0 2011-10-16
-</pre></td>
-</tr></table>
-</div>
-
-<p>That&rsquo;s it for the initial setup.</p>
-
-<h3 id="deployment-to-the-sonatype-oss-repository">DEPLOYMENT TO THE SONATYPE OSS REPOSITORY</h3>
-<p>Once you&rsquo;ve done all the previous steps in this post you can deploy your project with just one single command: &ldquo;gradle uploadArchives&rdquo;</p>
 ]]></content>
   </entry>
   
