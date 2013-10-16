@@ -1,0 +1,475 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>JavaFx: Structuring your Application - Service and Application State layer - Yennick Trevels</title>
+  <meta name="author" content="Yennick Trevels">
+
+  
+  <meta name="description" content="This post is part of a series of blog posts about structuring your JavaFx application.
+In this post I&rsquo;ll explain which classes should be used &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.yennicktrevels.com/blog/2013/10/15/javafx-structuring-your-application-service-and-application-state-layer">
+  <link href="/favicon.png" rel="icon">
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Gentium+Book+Basic:400,70">
+<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:400,700">
+<link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.min.css">
+
+<script type="text/javascript" src="/javascripts/libs/jquery.min.js"></script>
+<script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
+
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Yennick Trevels" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-44891800-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+
+<body>
+    <!-- Site name and menu section -->
+    <div class="container site-wrapper topNavSection">
+        <div class="site-inner-wrapper">
+            <div class="siteName">
+            Yennick Trevels
+</div>
+
+
+
+            <div class="main-menu">
+                <ul class="main-menu-navigation">
+    <li><a href="/">Home</a></li>
+    <li><a href="/blog">Blog</a></li>
+    <li><a href="/contact.html">Contact</a></li>
+</ul>
+
+
+            </div>
+        </div>
+    </div>
+
+    <!-- header -->
+<div class="container site-wrapper smallHeader">
+    <div class="site-inner-wrapper">
+        <p class="headerText">
+            BLOG
+        </p>
+    </div>
+</div>
+
+<div class="container site-wrapper">
+    <div class="site-inner-wrapper">
+        <div>
+        <article class="hentry" role="article">
+          
+  <header>
+    
+      <h1 class="entry-title">JavaFx: Structuring Your Application - Service and Application State Layer</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-15T22:59:00+02:00" pubdate data-updated="true">Oct 15<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>This post is part of a series of blog posts about structuring your JavaFx application.<br />
+In this post I&rsquo;ll explain which classes should be used to communicate with external sources and how we store application state. </p>
+
+<!--more-->
+
+<p>Here&rsquo;s an overview of all the posts in this series:</p>
+
+<ol>
+  <li>Overview</li>
+  <li>View layer</li>
+  <li>Application logic layer</li>
+  <li>Service - Application State layer(this post)</li>
+</ol>
+
+<h3 id="service">Service</h3>
+<p>A Service is used to communicate with an external resource. This can be anything, from a webserver to a printer. <br />
+Every Service should focus on a certain resource or a subset of it (like a Service which only performs contact related REST calls).<br />
+Again, it&rsquo;s also important to put your Service behind an interface. By doing this you can mock it when unit testing commands, but it also allows you to create a stub implementation which you can use while the back-end developers are creating the server code and swap it with the real implementation once they have finished the backend code.   </p>
+
+<p>Such a service can look like this:</p>
+
+<div><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+</pre></td>
+  <td class="code"><pre><span class="directive">public</span> <span class="type">interface</span> <span class="class">IEventService</span> {
+ 
+    <span class="predefined-type">List</span>&lt;EventVO&gt; getEvents();
+    EventVO getEventDetails(<span class="predefined-type">String</span> id);
+    <span class="type">void</span> acceptEvent(EventVO event);
+    <span class="type">void</span> declineEvent(EventVO event, <span class="predefined-type">String</span> reason);
+}
+</pre></td>
+</tr></table>
+</div>
+
+<p>And the stub implementation:</p>
+
+<div><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+<a href="#n8" name="n8">8</a>
+<a href="#n9" name="n9">9</a>
+<strong><a href="#n10" name="n10">10</a></strong>
+<a href="#n11" name="n11">11</a>
+<a href="#n12" name="n12">12</a>
+<a href="#n13" name="n13">13</a>
+<a href="#n14" name="n14">14</a>
+<a href="#n15" name="n15">15</a>
+<a href="#n16" name="n16">16</a>
+<a href="#n17" name="n17">17</a>
+<a href="#n18" name="n18">18</a>
+<a href="#n19" name="n19">19</a>
+<strong><a href="#n20" name="n20">20</a></strong>
+<a href="#n21" name="n21">21</a>
+<a href="#n22" name="n22">22</a>
+<a href="#n23" name="n23">23</a>
+<a href="#n24" name="n24">24</a>
+<a href="#n25" name="n25">25</a>
+<a href="#n26" name="n26">26</a>
+<a href="#n27" name="n27">27</a>
+<a href="#n28" name="n28">28</a>
+<a href="#n29" name="n29">29</a>
+<strong><a href="#n30" name="n30">30</a></strong>
+<a href="#n31" name="n31">31</a>
+<a href="#n32" name="n32">32</a>
+<a href="#n33" name="n33">33</a>
+<a href="#n34" name="n34">34</a>
+<a href="#n35" name="n35">35</a>
+<a href="#n36" name="n36">36</a>
+<a href="#n37" name="n37">37</a>
+<a href="#n38" name="n38">38</a>
+<a href="#n39" name="n39">39</a>
+<strong><a href="#n40" name="n40">40</a></strong>
+<a href="#n41" name="n41">41</a>
+<a href="#n42" name="n42">42</a>
+<a href="#n43" name="n43">43</a>
+<a href="#n44" name="n44">44</a>
+<a href="#n45" name="n45">45</a>
+<a href="#n46" name="n46">46</a>
+<a href="#n47" name="n47">47</a>
+<a href="#n48" name="n48">48</a>
+<a href="#n49" name="n49">49</a>
+<strong><a href="#n50" name="n50">50</a></strong>
+<a href="#n51" name="n51">51</a>
+<a href="#n52" name="n52">52</a>
+<a href="#n53" name="n53">53</a>
+<a href="#n54" name="n54">54</a>
+<a href="#n55" name="n55">55</a>
+<a href="#n56" name="n56">56</a>
+</pre></td>
+  <td class="code"><pre><span class="directive">public</span> <span class="type">class</span> <span class="class">StubEventService</span> <span class="directive">implements</span> IEventService {
+ 
+    <span class="directive">private</span> <span class="predefined-type">List</span>&lt;EventVO&gt; events;
+ 
+    <span class="directive">public</span> StubEventService() {
+        <span class="predefined-type">Calendar</span> calendarDate = <span class="predefined-type">GregorianCalendar</span>.getInstance();
+        calendarDate.set(<span class="integer">2012</span>, <span class="integer">4</span>, <span class="integer">24</span>, <span class="integer">10</span>, <span class="integer">20</span>);
+        <span class="predefined-type">Date</span> date = calendarDate.getTime();
+ 
+         
+        events = <span class="keyword">new</span> <span class="predefined-type">ArrayList</span>&lt;EventVO&gt;();
+        events.add(createEvent(<span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">First Event</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Paris, France</span><span class="delimiter">&quot;</span></span>, date, date,
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">The event will showcase the first application</span><span class="delimiter">&quot;</span></span>));
+        events.add(createEvent(<span class="string"><span class="delimiter">&quot;</span><span class="content">2</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Special meeting</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Manchester, UK</span><span class="delimiter">&quot;</span></span>, date, date,
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">A special meeting for a special application</span><span class="delimiter">&quot;</span></span>));
+        events.add(createEvent(<span class="string"><span class="delimiter">&quot;</span><span class="content">3</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Technology meetup</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Brussels, Belgium</span><span class="delimiter">&quot;</span></span>, date, date,
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">Geeking out with the latest technologies</span><span class="delimiter">&quot;</span></span>));
+        events.add(createEvent(<span class="string"><span class="delimiter">&quot;</span><span class="content">4</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Designer Conference</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Boston, US</span><span class="delimiter">&quot;</span></span>, date, date,
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">Various talks by the most famous designers in the industry</span><span class="delimiter">&quot;</span></span>));
+    }
+ 
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="predefined-type">List</span>&lt;EventVO&gt; getEvents() {
+        <span class="keyword">return</span> events;
+    }
+ 
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> EventVO getEventDetails(<span class="predefined-type">String</span> id) {
+        <span class="keyword">for</span> (EventVO event : events) {
+            <span class="keyword">if</span>(event.getId() == id) {
+                <span class="keyword">return</span> event;
+            }
+        }
+ 
+        <span class="keyword">return</span> <span class="predefined-constant">null</span>;
+    }
+ 
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="type">void</span> acceptEvent(EventVO event) {
+    }
+ 
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="type">void</span> declineEvent(EventVO event, <span class="predefined-type">String</span> reason) {
+    }
+ 
+    <span class="directive">private</span> EventVO createEvent(<span class="predefined-type">String</span> id, <span class="predefined-type">String</span> name, <span class="predefined-type">String</span> location, <span class="predefined-type">Date</span> startTime, <span class="predefined-type">Date</span> endTime, <span class="predefined-type">String</span> description) {
+        EventVO event = <span class="keyword">new</span> EventVO();
+        event.setId(id);
+        event.setName(name);
+        event.setLocation(location);
+        event.setStartTime(startTime);
+        event.setEndTime(endTime);
+        event.setDescription(description);
+        <span class="keyword">return</span> event;
+    }
+}
+</pre></td>
+</tr></table>
+</div>
+
+<h3 id="the-model">The Model</h3>
+<p>A model is used to store and share state across your application. This allows you to react to certain state changes in multiple parts of your application.<br />
+A model is in most cases just a class with some properties that define the state (e.g. the selected contact, the list of contacts that is shown). In some cases it can contain some basic logic, but this should never be complicated (if it is, then move it to a command). <br />
+In most cases it will be a command that updates the model or takes values from it to return it to the view layer.<br />
+As always, you should put the Model behind an interface for unit testing purposes.   </p>
+
+<p>This is how such a model can look like:</p>
+
+<div><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+</pre></td>
+  <td class="code"><pre><span class="directive">public</span> <span class="type">interface</span> <span class="class">IEventSelectionModel</span> {
+    EventVO getSelectedEvent();
+ 
+    <span class="type">void</span> setSelectedEvent(EventVO event);
+ 
+    ObjectProperty&lt;EventVO&gt; getSelectedEventProperty();
+}
+</pre></td>
+</tr></table>
+</div>
+
+<p>And the implementation:</p>
+
+<div><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+<a href="#n8" name="n8">8</a>
+<a href="#n9" name="n9">9</a>
+<strong><a href="#n10" name="n10">10</a></strong>
+<a href="#n11" name="n11">11</a>
+<a href="#n12" name="n12">12</a>
+<a href="#n13" name="n13">13</a>
+<a href="#n14" name="n14">14</a>
+<a href="#n15" name="n15">15</a>
+<a href="#n16" name="n16">16</a>
+<a href="#n17" name="n17">17</a>
+<a href="#n18" name="n18">18</a>
+<a href="#n19" name="n19">19</a>
+</pre></td>
+  <td class="code"><pre><span class="directive">public</span> <span class="type">class</span> <span class="class">EventSelectionModel</span> <span class="directive">implements</span> IEventSelectionModel {
+ 
+    <span class="directive">private</span> ObjectProperty&lt;EventVO&gt; selectedEvent = <span class="keyword">new</span> SimpleObjectProperty&lt;EventVO&gt;(<span class="local-variable">this</span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">selectedEvent</span><span class="delimiter">&quot;</span></span>);
+ 
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> EventVO getSelectedEvent() {
+        <span class="keyword">return</span> selectedEvent.get();
+    }
+ 
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="type">void</span> setSelectedEvent(EventVO event) {
+        selectedEvent.set(event);
+    }
+ 
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> ObjectProperty&lt;EventVO&gt; getSelectedEventProperty() {
+        <span class="keyword">return</span> selectedEvent;
+    }
+}
+</pre></td>
+</tr></table>
+</div>
+
+<h3 id="conclusion">Conclusion</h3>
+<p>This was the final article in the series. <br />
+My goal was to share my view on a fat client architecture and hopefully get the conversation started about client architectures with JavaFx. That way we can improve this architecture or even find (better) alternatives.</p>
+</div>
+
+
+          <footer>
+            <p class="meta">
+              
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Yennick Trevels</span></span>
+
+              
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-15T22:59:00+02:00" pubdate data-updated="true">Oct 15<span>th</span>, 2013</time>
+              
+
+
+            </p>
+            
+              <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://www.yennicktrevels.com/blog/2013/10/15/javafx-structuring-your-application-service-and-application-state-layer/" data-via="SlevinBE" data-counturl="http://www.yennicktrevels.com/blog/2013/10/15/javafx-structuring-your-application-service-and-application-state-layer/" >Tweet</a>
+  
+  
+  
+</div>
+
+            
+            <p class="meta">
+              
+                <a class="basic-alignment left" href="/blog/2013/10/15/javafx-structuring-your-application-application-logic-layer/" title="Previous Post: JavaFx: Structuring your Application - Application Logic Layer">&laquo; JavaFx: Structuring your Application - Application Logic Layer</a>
+              
+              
+            </p>
+          </footer>
+        </article>
+        
+        
+        </div>
+        
+        <aside class="sidebar">
+          
+            <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/10/15/javafx-structuring-your-application-service-and-application-state-layer/">JavaFx: Structuring your Application - Service and Application State layer</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/10/15/javafx-structuring-your-application-application-logic-layer/">JavaFx: Structuring your Application - Application Logic Layer</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/10/15/javafx-structuring-your-application-view-layer/">JavaFx: Structuring your Application - View Layer</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/10/15/javafx-structuring-your-application-overview/">JavaFx: Structuring your Application - Overview</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/10/11/automated-gradle-project-deployment-to-sonatype-oss-repository/">Automated Gradle project deployment to Sonatype OSS Repository</a>
+      </li>
+    
+  </ul>
+</section>
+
+          
+        </aside>
+        
+    </div>
+</div>
+
+<div class="newsletter-signup-section">
+    <div class="site-inner-wrapper">
+        <!-- Mailchimp newsletter signup form -->
+        <div id="mc_embed_signup">
+            <form action="http://twitter.us7.list-manage.com/subscribe/post?u=02f28b618c351eec5f12806b3&amp;id=a42d48b8cd" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+                <label for="mce-EMAIL">Follow my content</label>
+                <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required>
+                <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+            </form>
+        </div>
+    </div>
+</div>
+
+    <!-- footer -->
+    <div class="container site-wrapper">
+        <div class="site-inner-wrapper footer-wrapper">
+            <div class="footer">
+    <ul class="socialLinks">
+        <li>
+            <a href="https://twitter.com/SlevinBE" alt="twitter link"><img src="/images/twitter-icon.png" /></a>
+        </li>
+        <li>
+            <a href="http://www.linkedin.com/in/yennicktrevels" alt="linkedin link"><img src="/images/linkedin-icon.png" /></a>
+        </li>
+        <li>
+            <a href="https://github.com/SlevinBE" alt="github link"><img src="/images/github-icon.png" /></a>
+        </li>
+    </ul>
+
+    <p class="copyright">
+        © Copyright 2013 Yennick Trevels. All rights reserved.
+        Powered by <a href="http://octopress.org">Octopress</a>
+    </p>
+</div>
+
+
+        </div>
+    </div>
+</body>
+</html>

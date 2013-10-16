@@ -1,0 +1,1389 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Yennick Trevels]]></title>
+  <link href="http://www.yennicktrevels.com/atom.xml" rel="self"/>
+  <link href="http://www.yennicktrevels.com/"/>
+  <updated>2013-10-16T21:24:14+02:00</updated>
+  <id>http://www.yennicktrevels.com/</id>
+  <author>
+    <name><![CDATA[Yennick Trevels]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[JavaFx: Structuring your Application - Service and Application State layer]]></title>
+    <link href="http://www.yennicktrevels.com/blog/2013/10/15/javafx-structuring-your-application-service-and-application-state-layer/"/>
+    <updated>2013-10-15T22:59:00+02:00</updated>
+    <id>http://www.yennicktrevels.com/blog/2013/10/15/javafx-structuring-your-application-service-and-application-state-layer</id>
+    <content type="html"><![CDATA[<p>This post is part of a series of blog posts about structuring your JavaFx application.<br />
+In this post I&rsquo;ll explain which classes should be used to communicate with external sources and how we store application state. </p>
+
+<!--more-->
+
+<p>Here&rsquo;s an overview of all the posts in this series:</p>
+
+<ol>
+  <li>Overview</li>
+  <li>View layer</li>
+  <li>Application logic layer</li>
+  <li>Service - Application State layer(this post)</li>
+</ol>
+
+<h3 id="service">Service</h3>
+<p>A Service is used to communicate with an external resource. This can be anything, from a webserver to a printer. <br />
+Every Service should focus on a certain resource or a subset of it (like a Service which only performs contact related REST calls).<br />
+Again, it&rsquo;s also important to put your Service behind an interface. By doing this you can mock it when unit testing commands, but it also allows you to create a stub implementation which you can use while the back-end developers are creating the server code and swap it with the real implementation once they have finished the backend code.   </p>
+
+<p>Such a service can look like this:</p>
+
+<div><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+</pre></td>
+  <td class="code"><pre><span class="directive">public</span> <span class="type">interface</span> <span class="class">IEventService</span> {
+ 
+    <span class="predefined-type">List</span>&lt;EventVO&gt; getEvents();
+    EventVO getEventDetails(<span class="predefined-type">String</span> id);
+    <span class="type">void</span> acceptEvent(EventVO event);
+    <span class="type">void</span> declineEvent(EventVO event, <span class="predefined-type">String</span> reason);
+}
+</pre></td>
+</tr></table>
+</div>
+
+<p>And the stub implementation:</p>
+
+<div><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+<a href="#n8" name="n8">8</a>
+<a href="#n9" name="n9">9</a>
+<strong><a href="#n10" name="n10">10</a></strong>
+<a href="#n11" name="n11">11</a>
+<a href="#n12" name="n12">12</a>
+<a href="#n13" name="n13">13</a>
+<a href="#n14" name="n14">14</a>
+<a href="#n15" name="n15">15</a>
+<a href="#n16" name="n16">16</a>
+<a href="#n17" name="n17">17</a>
+<a href="#n18" name="n18">18</a>
+<a href="#n19" name="n19">19</a>
+<strong><a href="#n20" name="n20">20</a></strong>
+<a href="#n21" name="n21">21</a>
+<a href="#n22" name="n22">22</a>
+<a href="#n23" name="n23">23</a>
+<a href="#n24" name="n24">24</a>
+<a href="#n25" name="n25">25</a>
+<a href="#n26" name="n26">26</a>
+<a href="#n27" name="n27">27</a>
+<a href="#n28" name="n28">28</a>
+<a href="#n29" name="n29">29</a>
+<strong><a href="#n30" name="n30">30</a></strong>
+<a href="#n31" name="n31">31</a>
+<a href="#n32" name="n32">32</a>
+<a href="#n33" name="n33">33</a>
+<a href="#n34" name="n34">34</a>
+<a href="#n35" name="n35">35</a>
+<a href="#n36" name="n36">36</a>
+<a href="#n37" name="n37">37</a>
+<a href="#n38" name="n38">38</a>
+<a href="#n39" name="n39">39</a>
+<strong><a href="#n40" name="n40">40</a></strong>
+<a href="#n41" name="n41">41</a>
+<a href="#n42" name="n42">42</a>
+<a href="#n43" name="n43">43</a>
+<a href="#n44" name="n44">44</a>
+<a href="#n45" name="n45">45</a>
+<a href="#n46" name="n46">46</a>
+<a href="#n47" name="n47">47</a>
+<a href="#n48" name="n48">48</a>
+<a href="#n49" name="n49">49</a>
+<strong><a href="#n50" name="n50">50</a></strong>
+<a href="#n51" name="n51">51</a>
+<a href="#n52" name="n52">52</a>
+<a href="#n53" name="n53">53</a>
+<a href="#n54" name="n54">54</a>
+<a href="#n55" name="n55">55</a>
+<a href="#n56" name="n56">56</a>
+</pre></td>
+  <td class="code"><pre><span class="directive">public</span> <span class="type">class</span> <span class="class">StubEventService</span> <span class="directive">implements</span> IEventService {
+ 
+    <span class="directive">private</span> <span class="predefined-type">List</span>&lt;EventVO&gt; events;
+ 
+    <span class="directive">public</span> StubEventService() {
+        <span class="predefined-type">Calendar</span> calendarDate = <span class="predefined-type">GregorianCalendar</span>.getInstance();
+        calendarDate.set(<span class="integer">2012</span>, <span class="integer">4</span>, <span class="integer">24</span>, <span class="integer">10</span>, <span class="integer">20</span>);
+        <span class="predefined-type">Date</span> date = calendarDate.getTime();
+ 
+         
+        events = <span class="keyword">new</span> <span class="predefined-type">ArrayList</span>&lt;EventVO&gt;();
+        events.add(createEvent(<span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">First Event</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Paris, France</span><span class="delimiter">&quot;</span></span>, date, date,
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">The event will showcase the first application</span><span class="delimiter">&quot;</span></span>));
+        events.add(createEvent(<span class="string"><span class="delimiter">&quot;</span><span class="content">2</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Special meeting</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Manchester, UK</span><span class="delimiter">&quot;</span></span>, date, date,
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">A special meeting for a special application</span><span class="delimiter">&quot;</span></span>));
+        events.add(createEvent(<span class="string"><span class="delimiter">&quot;</span><span class="content">3</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Technology meetup</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Brussels, Belgium</span><span class="delimiter">&quot;</span></span>, date, date,
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">Geeking out with the latest technologies</span><span class="delimiter">&quot;</span></span>));
+        events.add(createEvent(<span class="string"><span class="delimiter">&quot;</span><span class="content">4</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Designer Conference</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Boston, US</span><span class="delimiter">&quot;</span></span>, date, date,
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">Various talks by the most famous designers in the industry</span><span class="delimiter">&quot;</span></span>));
+    }
+ 
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="predefined-type">List</span>&lt;EventVO&gt; getEvents() {
+        <span class="keyword">return</span> events;
+    }
+ 
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> EventVO getEventDetails(<span class="predefined-type">String</span> id) {
+        <span class="keyword">for</span> (EventVO event : events) {
+            <span class="keyword">if</span>(event.getId() == id) {
+                <span class="keyword">return</span> event;
+            }
+        }
+ 
+        <span class="keyword">return</span> <span class="predefined-constant">null</span>;
+    }
+ 
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="type">void</span> acceptEvent(EventVO event) {
+    }
+ 
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="type">void</span> declineEvent(EventVO event, <span class="predefined-type">String</span> reason) {
+    }
+ 
+    <span class="directive">private</span> EventVO createEvent(<span class="predefined-type">String</span> id, <span class="predefined-type">String</span> name, <span class="predefined-type">String</span> location, <span class="predefined-type">Date</span> startTime, <span class="predefined-type">Date</span> endTime, <span class="predefined-type">String</span> description) {
+        EventVO event = <span class="keyword">new</span> EventVO();
+        event.setId(id);
+        event.setName(name);
+        event.setLocation(location);
+        event.setStartTime(startTime);
+        event.setEndTime(endTime);
+        event.setDescription(description);
+        <span class="keyword">return</span> event;
+    }
+}
+</pre></td>
+</tr></table>
+</div>
+
+<h3 id="the-model">The Model</h3>
+<p>A model is used to store and share state across your application. This allows you to react to certain state changes in multiple parts of your application.<br />
+A model is in most cases just a class with some properties that define the state (e.g. the selected contact, the list of contacts that is shown). In some cases it can contain some basic logic, but this should never be complicated (if it is, then move it to a command). <br />
+In most cases it will be a command that updates the model or takes values from it to return it to the view layer.<br />
+As always, you should put the Model behind an interface for unit testing purposes.   </p>
+
+<p>This is how such a model can look like:</p>
+
+<div><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+</pre></td>
+  <td class="code"><pre><span class="directive">public</span> <span class="type">interface</span> <span class="class">IEventSelectionModel</span> {
+    EventVO getSelectedEvent();
+ 
+    <span class="type">void</span> setSelectedEvent(EventVO event);
+ 
+    ObjectProperty&lt;EventVO&gt; getSelectedEventProperty();
+}
+</pre></td>
+</tr></table>
+</div>
+
+<p>And the implementation:</p>
+
+<div><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+<a href="#n8" name="n8">8</a>
+<a href="#n9" name="n9">9</a>
+<strong><a href="#n10" name="n10">10</a></strong>
+<a href="#n11" name="n11">11</a>
+<a href="#n12" name="n12">12</a>
+<a href="#n13" name="n13">13</a>
+<a href="#n14" name="n14">14</a>
+<a href="#n15" name="n15">15</a>
+<a href="#n16" name="n16">16</a>
+<a href="#n17" name="n17">17</a>
+<a href="#n18" name="n18">18</a>
+<a href="#n19" name="n19">19</a>
+</pre></td>
+  <td class="code"><pre><span class="directive">public</span> <span class="type">class</span> <span class="class">EventSelectionModel</span> <span class="directive">implements</span> IEventSelectionModel {
+ 
+    <span class="directive">private</span> ObjectProperty&lt;EventVO&gt; selectedEvent = <span class="keyword">new</span> SimpleObjectProperty&lt;EventVO&gt;(<span class="local-variable">this</span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">selectedEvent</span><span class="delimiter">&quot;</span></span>);
+ 
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> EventVO getSelectedEvent() {
+        <span class="keyword">return</span> selectedEvent.get();
+    }
+ 
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="type">void</span> setSelectedEvent(EventVO event) {
+        selectedEvent.set(event);
+    }
+ 
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> ObjectProperty&lt;EventVO&gt; getSelectedEventProperty() {
+        <span class="keyword">return</span> selectedEvent;
+    }
+}
+</pre></td>
+</tr></table>
+</div>
+
+<h3 id="conclusion">Conclusion</h3>
+<p>This was the final article in the series. <br />
+My goal was to share my view on a fat client architecture and hopefully get the conversation started about client architectures with JavaFx. That way we can improve this architecture or even find (better) alternatives.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[JavaFx: Structuring your Application - Application Logic Layer]]></title>
+    <link href="http://www.yennicktrevels.com/blog/2013/10/15/javafx-structuring-your-application-application-logic-layer/"/>
+    <updated>2013-10-15T22:49:00+02:00</updated>
+    <id>http://www.yennicktrevels.com/blog/2013/10/15/javafx-structuring-your-application-application-logic-layer</id>
+    <content type="html"><![CDATA[<p>This post is part of a series of blog posts about structuring your JavaFx application.<br />
+Because this architecture is targeting fat clients which have all the business logic on the client side it is important to structure this in an organized and efficient way. In this post I&rsquo;ll explain how you can organize your application logic in a way that it won&rsquo;t block the UI. </p>
+
+<!--more-->
+
+<p>Here&rsquo;s an overview of all the posts in this series:</p>
+
+<ol>
+  <li>Overview</li>
+  <li>View layer</li>
+  <li>Application logic layer(this post)</li>
+  <li>Service - Application State layer</li>
+</ol>
+
+<h3 id="the-command">The Command</h3>
+
+<p>A command is a stateless object which is executed once and then disposed of. It has a single responsibility, which clearly defines its purpose.<br />
+Such a command can for example have the responsibility to create a new contact, calculate the total amount of money a client has to pay etc.<br />
+This leads to a higher number of classes, but it has some advantages over a controller:  </p>
+
+<ul>
+  <li>A command will have less dependencies because of its single responsibility. This makes it easier to test.</li>
+  <li>When using good class/package name conventions it&rsquo;s easier to find a certain piece of logic.</li>
+</ul>
+
+<p>A command can use Services and Models to do its job, but should never reference the mediator. </p>
+
+<h4 id="running-it-in-the-background">RUNNING IT IN THE BACKGROUND</h4>
+<p>Because business logic should run in a background thread to avoid blocking the UI, I&rsquo;m using a convention to make every command extend from the JavaFx Service class. <br />
+The Service class is used in JavaFx to run some code in one or more background threads. More info on this class can be found here: <a href="http://docs.oracle.com/javafx/2/api/javafx/concurrent/Service.html">http://docs.oracle.com/javafx/2/api/javafx/concurrent/Service.html</a> <br />
+This fits perfectly in my design because it makes sure that all business logic is executed in a background thread. Because it&rsquo;s an integral part of our application structure developers won&rsquo;t forget to start a new thread because it will be done transparently when creating a new instance of a command and starting it.   </p>
+
+<h4 id="how-it-looks-like-in-code">HOW IT LOOKS LIKE IN CODE</h4>
+<p>This is how it looks like in code. The command has one parameter which should be set before starting the command and it has a dependency to the IEventService. When it&rsquo;s finished it return an EventVO instance with all the details of the event.</p>
+
+<div><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+<a href="#n8" name="n8">8</a>
+<a href="#n9" name="n9">9</a>
+<strong><a href="#n10" name="n10">10</a></strong>
+<a href="#n11" name="n11">11</a>
+<a href="#n12" name="n12">12</a>
+<a href="#n13" name="n13">13</a>
+<a href="#n14" name="n14">14</a>
+<a href="#n15" name="n15">15</a>
+<a href="#n16" name="n16">16</a>
+</pre></td>
+  <td class="code"><pre><span class="directive">public</span> <span class="type">class</span> <span class="class">LoadEventDetailsCommand</span> <span class="directive">extends</span> Service&lt;EventVO&gt; {
+ 
+    <span class="annotation">@Inject</span>
+    <span class="directive">public</span> IEventService eventService;
+    <span class="directive">public</span> <span class="predefined-type">String</span> eventId;
+ 
+    <span class="annotation">@Override</span>
+    <span class="directive">protected</span> Task&lt;EventVO&gt; createTask() {
+        <span class="keyword">return</span> <span class="keyword">new</span> Task&lt;EventVO&gt;() {
+            <span class="annotation">@Override</span>
+            <span class="directive">protected</span> EventVO call() <span class="directive">throws</span> <span class="exception">Exception</span> {
+                <span class="keyword">return</span> eventService.getEventDetails(eventId);
+            }
+        };
+    }
+}
+</pre></td>
+</tr></table>
+</div>
+
+<p>And this is how you can use it in the mediator. The commandProvider is something which I&rsquo;ll discuss in a moment, but it basically creates a new instance of a certain command class. When you call the start() method the command will start its execution in a background thread.</p>
+
+<div><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+</pre></td>
+  <td class="code"><pre>LoadEventDetailsCommand command = commandProvider.get(LoadEventDetailsCommand.class);
+command.setOnSucceeded(<span class="keyword">new</span> LoadEventDetailsSucceededHandler());
+command.eventId = eventSelectionModel.getSelectedEvent().getId();
+command.start();
+</pre></td>
+</tr></table>
+</div>
+
+<p>And finally the succeeded handler which is just an inner class in my mediator. It gets the EventVO result from the command and asks the view to show the new details:</p>
+
+<div><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+</pre></td>
+  <td class="code"><pre><span class="directive">private</span> <span class="type">class</span> <span class="class">LoadEventDetailsSucceededHandler</span> <span class="directive">implements</span> <span class="predefined-type">EventHandler</span>&lt;WorkerStateEvent&gt; {
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="type">void</span> handle(WorkerStateEvent workerStateEvent) {
+        view.updateEventDetails((EventVO) workerStateEvent.getSource().getValue());
+    }
+}
+</pre></td>
+</tr></table>
+</div>
+
+<h3 id="the-commandprovider">The CommandProvider</h3>
+<p>The CommandProvider is a class which I&rsquo;ve created as sort of a Command factory, which uses a Guice injector to produce the instances. This allows us to inject dependencies in the commands. </p>
+
+<p>The interface:</p>
+
+<div><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+</pre></td>
+  <td class="code"><pre><span class="directive">public</span> <span class="type">interface</span> <span class="class">ICommandProvider</span> {
+ 
+    &lt;T <span class="directive">extends</span> Service&gt; T get(<span class="predefined-type">Class</span>&lt;T&gt; type);
+}
+</pre></td>
+</tr></table>
+</div>
+
+<p>And the implementation:</p>
+
+<div><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+<a href="#n8" name="n8">8</a>
+<a href="#n9" name="n9">9</a>
+</pre></td>
+  <td class="code"><pre><span class="directive">public</span> <span class="type">class</span> <span class="class">CommandProvider</span> <span class="directive">implements</span> ICommandProvider {
+ 
+    <span class="annotation">@Inject</span>
+    <span class="directive">public</span> Injector injector;
+ 
+    <span class="directive">public</span> &lt;T <span class="directive">extends</span> Service&gt; T get(<span class="predefined-type">Class</span>&lt;T&gt; type) {
+        <span class="keyword">return</span> injector.getInstance(type);
+    }
+}
+</pre></td>
+</tr></table>
+</div>
+
+<h3 id="conclusion">Conclusion</h3>
+<p>In this article we&rsquo;ve seen how you can organize the business logic in a single layer and how you can make sure that it won&rsquo;t block the UI. In my next and final article I&rsquo;ll explore the Service and Model classes which allow us to communicate with external sources and store application state.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[JavaFx: Structuring your Application - View Layer]]></title>
+    <link href="http://www.yennicktrevels.com/blog/2013/10/15/javafx-structuring-your-application-view-layer/"/>
+    <updated>2013-10-15T22:32:00+02:00</updated>
+    <id>http://www.yennicktrevels.com/blog/2013/10/15/javafx-structuring-your-application-view-layer</id>
+    <content type="html"><![CDATA[<p>This post is part of a series of blog posts about structuring your JavaFx application.<br />
+In this post I&rsquo;ll explain the components of the view layer (View and Mediator), how they should interact and some best practices on how to use them.  </p>
+
+<!--more-->
+
+<p>Here&rsquo;s an overview:</p>
+
+<ol>
+  <li>Overview</li>
+  <li>View layer (this post)</li>
+  <li>Application logic layer</li>
+  <li>Service - Application State layer</li>
+</ol>
+
+<h3 id="the-view">The View</h3>
+<p>This class is where you&rsquo;ll use the JavaFx components to build your UI. It&rsquo;s also responsible for displaying notifications, opening new windows or just about anything that it related to the UI (and which should happen on the UI thread).<br />
+I prefer to create my UI with pure Java code instead of using FXML. It&rsquo;s fast, easier to use with Guice and it&rsquo;s giving me more control over my code. Therefore my structure is based on this.<br />
+To keep the Views focused on their tasks, you should follow these rules. </p>
+
+<h4 id="rule-1-dont-let-your-view-extend-javafx-components">RULE 1: DON&rsquo;T LET YOUR VIEW EXTEND JAVAFX COMPONENTS</h4>
+<p>The View should never extend a JavaFx component, it should only use JavaFx components. This rule is also known as &ldquo;composition over inheritance&rdquo;. <br />
+Our View classes will have a getView() method which will create and return the top-level component/container of that view. That way the actual view is only instantiated when the getView() method is called. This has several benefits:  </p>
+
+<ol>
+  <li>Remember from the previous post, the View classes are mapped in Guice and injected in the View classes where they will be used. By not extending a JavaFx component, the cost of creation will be lower when Guice creates and injects these Views.  </li>
+  <li>You can extend any other class you want because the design doesn&rsquo;t force you to extend JavaFx components.  </li>
+  <li>The API of your view will not be cluttered with all the methods of the JavaFx component </li>
+</ol>
+
+<h4 id="rule-2-the-view-should-never-contain-application-logic">RULE 2: THE VIEW SHOULD NEVER CONTAIN APPLICATION LOGIC</h4>
+<p>The view can contain view logic (like when to play an animation), but should never contain application logic. <br />
+Application logic can sometimes take up several 100ms. If you do this on the UI thread, then during this time the UI will not be able to update anything, so it will feel unresponsive. Therefore it&rsquo;s very important to run your application logic on a separate thread (which in this structure will be in a Command).<br />
+If some application logic should be executed in response to a button click, it should call the mediator to delegate this to the application logic layer.  </p>
+
+<h4 id="rule-3-put-your-view-behind-an-interface">RULE 3: PUT YOUR VIEW BEHIND AN INTERFACE</h4>
+<p>You should create an interface for your View class. This interface should contain the methods that can be called by the Mediator. <br />
+Creating such an interface has several advantages:</p>
+
+<ol>
+  <li>You create an API for your View which clearly indicates what it can do.</li>
+  <li>The mediator can work against this API, so it isn&rsquo;t tied to a certain View implementation. This is especially handy when writing unit tests for your mediator because you can create a mock for the view and inject that into the mediator.</li>
+</ol>
+
+<h4 id="how-it-looks-like-in-code">HOW IT LOOKS LIKE IN CODE</h4>
+<p>Now how does this look like in code when you apply the rules above? I&rsquo;ll show you some code of a view which shows a list of events. The user can select one of the events by clicking on them. </p>
+
+<p>First we have the View interface:</p>
+
+<div><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+</pre></td>
+  <td class="code"><pre><span class="directive">public</span> <span class="type">interface</span> <span class="class">IEventListView</span> {
+ 
+    <span class="comment">/**
+     * Asks the view to update the list of events with this new list.
+     */</span>
+    <span class="type">void</span> updateEventList(<span class="predefined-type">List</span>&lt;EventVO&gt; events);
+}
+</pre></td>
+</tr></table>
+</div>
+
+<p>And then we have the View implementation:</p>
+
+<div><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+<a href="#n8" name="n8">8</a>
+<a href="#n9" name="n9">9</a>
+<strong><a href="#n10" name="n10">10</a></strong>
+<a href="#n11" name="n11">11</a>
+<a href="#n12" name="n12">12</a>
+<a href="#n13" name="n13">13</a>
+<a href="#n14" name="n14">14</a>
+<a href="#n15" name="n15">15</a>
+<a href="#n16" name="n16">16</a>
+<a href="#n17" name="n17">17</a>
+<a href="#n18" name="n18">18</a>
+<a href="#n19" name="n19">19</a>
+<strong><a href="#n20" name="n20">20</a></strong>
+<a href="#n21" name="n21">21</a>
+<a href="#n22" name="n22">22</a>
+<a href="#n23" name="n23">23</a>
+<a href="#n24" name="n24">24</a>
+<a href="#n25" name="n25">25</a>
+<a href="#n26" name="n26">26</a>
+<a href="#n27" name="n27">27</a>
+<a href="#n28" name="n28">28</a>
+<a href="#n29" name="n29">29</a>
+<strong><a href="#n30" name="n30">30</a></strong>
+<a href="#n31" name="n31">31</a>
+<a href="#n32" name="n32">32</a>
+<a href="#n33" name="n33">33</a>
+<a href="#n34" name="n34">34</a>
+<a href="#n35" name="n35">35</a>
+<a href="#n36" name="n36">36</a>
+<a href="#n37" name="n37">37</a>
+<a href="#n38" name="n38">38</a>
+<a href="#n39" name="n39">39</a>
+</pre></td>
+  <td class="code"><pre><span class="directive">public</span> <span class="type">class</span> <span class="class">EventListView</span> <span class="directive">implements</span> IEventListView {
+ 
+    <span class="annotation">@Inject</span>
+    <span class="directive">public</span> IEventListMediator mediator;
+ 
+    <span class="directive">private</span> <span class="predefined-type">ListView</span> listView;
+    <span class="directive">private</span> ObservableList events;
+ 
+    <span class="directive">public</span> <span class="predefined-type">ListView</span> getView() {
+        <span class="keyword">if</span>(listView == <span class="predefined-constant">null</span>) {
+            events = FXCollections.observableArrayList();
+ 
+            listView =  ListViewBuilder.create()
+                    .items(events)
+                    .onMouseClicked(<span class="keyword">new</span> EventListMouseClickedHandler())
+                    .build();
+            listView.setCellFactory(<span class="keyword">new</span> EventListItemRenderer());
+ 
+            <span class="comment">//when the view is created, ask the mediator to load the events.</span>
+            mediator.loadEvents();
+        }
+ 
+        <span class="keyword">return</span> listView;
+    }
+ 
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="type">void</span> updateEventList(<span class="predefined-type">List</span>&lt;EventVO&gt; events) {
+        <span class="local-variable">this</span>.events.clear();
+        <span class="local-variable">this</span>.events.addAll(events);
+    }
+ 
+    <span class="directive">private</span> <span class="type">class</span> <span class="class">EventListMouseClickedHandler</span> <span class="directive">implements</span> <span class="predefined-type">EventHandler</span>&lt;<span class="predefined-type">MouseEvent</span>&gt; {
+ 
+        <span class="annotation">@Override</span>
+        <span class="directive">public</span> <span class="type">void</span> handle(<span class="predefined-type">MouseEvent</span> mouseEvent) {
+            mediator.updateSelectedEvent((EventVO)listView.getSelectionModel().getSelectedItem());
+        }
+    }
+}
+</pre></td>
+</tr></table>
+</div>
+
+<p>This view can then be used in the overview View like this:</p>
+
+<div><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+<a href="#n8" name="n8">8</a>
+<a href="#n9" name="n9">9</a>
+<strong><a href="#n10" name="n10">10</a></strong>
+<a href="#n11" name="n11">11</a>
+<a href="#n12" name="n12">12</a>
+<a href="#n13" name="n13">13</a>
+<a href="#n14" name="n14">14</a>
+<a href="#n15" name="n15">15</a>
+<a href="#n16" name="n16">16</a>
+<a href="#n17" name="n17">17</a>
+<a href="#n18" name="n18">18</a>
+<a href="#n19" name="n19">19</a>
+<strong><a href="#n20" name="n20">20</a></strong>
+<a href="#n21" name="n21">21</a>
+<a href="#n22" name="n22">22</a>
+<a href="#n23" name="n23">23</a>
+</pre></td>
+  <td class="code"><pre><span class="directive">public</span> <span class="type">class</span> <span class="class">EventOverviewView</span> <span class="directive">implements</span> IEventOverviewView {
+ 
+    ...
+ 
+    <span class="annotation">@Inject</span>
+    <span class="directive">public</span> EventListView eventListView;
+ 
+    <span class="directive">public</span> Pane getView() {
+        <span class="keyword">if</span>(view == <span class="predefined-constant">null</span>) {
+            view = PaneBuilder.create()
+                    .children(
+                            eventList = eventListView.getView()
+                    )
+                    .build();
+                      
+                    ...
+        }
+ 
+        <span class="keyword">return</span> view;
+    }
+  
+    ...
+}
+</pre></td>
+</tr></table>
+</div>
+
+<h3 id="the-mediator">The Mediator</h3>
+<p>The Mediator is the postman between the view and the application logic. It is receiving messages (calls) from the View and it passes them on to Commands. It also passes on messages that are coming from the application logic to the view. Again, some rules apply here. </p>
+
+<h4 id="rule-1-the-mediator-should-not-contain-any-application-logic">RULE 1: THE MEDIATOR SHOULD NOT CONTAIN ANY APPLICATION LOGIC</h4>
+
+<p>The mediator runs on the UI thread, so it should not contain any application logic as this can make your application unresponsive. It should instead create a command (by using the CommandProvider class) and start the command which will then execute the application logic.<br />
+By following this rule we avoid duplicate code and make sure that application logic can always be found in one layer instead of being scattered in multiple layers, which in the end makes your application more maintainable.  </p>
+
+<h4 id="rule-2-the-mediator-should-have-an-interface">RULE 2: THE MEDIATOR SHOULD HAVE AN INTERFACE</h4>
+
+<p>The Mediator should have an interface which defines which actions it can perform. These methods can then be called in the view.  </p>
+
+<h4 id="rule-3-dont-do-complex-manipulations-on-your-models-in-your-mediator">RULE 3: DON&rsquo;T DO COMPLEX MANIPULATIONS ON YOUR MODELS IN YOUR MEDIATOR</h4>
+
+<p>In some cases it can be handy to inject a Model into the mediator to directly access the application state without having to write a command for it. But to avoid excessive use of this, you should only listen to changes on the model, get simple data from it or set simple things on it. If the data needs to be manipulated in any way, don&rsquo;t access the model directly but create a command instead which will contain this logic. So be very careful when accessing the Model from your Mediator. </p>
+
+<h4 id="how-it-looks-like-in-code-1">HOW IT LOOKS LIKE IN CODE</h4>
+
+<p>When you apply these rules it will look like this. </p>
+
+<p>First we have the mediator:</p>
+
+<div><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+</pre></td>
+  <td class="code"><pre><span class="directive">public</span> <span class="type">interface</span> <span class="class">IEventListMediator</span> {
+ 
+    <span class="type">void</span> loadEvents();
+ 
+    <span class="type">void</span> updateSelectedEvent(EventVO event);
+}
+</pre></td>
+</tr></table>
+</div>
+
+<p>And then we have the Mediator implementation:</p>
+
+<div><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+<a href="#n8" name="n8">8</a>
+<a href="#n9" name="n9">9</a>
+<strong><a href="#n10" name="n10">10</a></strong>
+<a href="#n11" name="n11">11</a>
+<a href="#n12" name="n12">12</a>
+<a href="#n13" name="n13">13</a>
+<a href="#n14" name="n14">14</a>
+<a href="#n15" name="n15">15</a>
+<a href="#n16" name="n16">16</a>
+<a href="#n17" name="n17">17</a>
+<a href="#n18" name="n18">18</a>
+<a href="#n19" name="n19">19</a>
+<strong><a href="#n20" name="n20">20</a></strong>
+<a href="#n21" name="n21">21</a>
+<a href="#n22" name="n22">22</a>
+<a href="#n23" name="n23">23</a>
+<a href="#n24" name="n24">24</a>
+<a href="#n25" name="n25">25</a>
+<a href="#n26" name="n26">26</a>
+<a href="#n27" name="n27">27</a>
+<a href="#n28" name="n28">28</a>
+</pre></td>
+  <td class="code"><pre><span class="directive">public</span> <span class="type">class</span> <span class="class">EventListMediator</span> <span class="directive">implements</span> IEventListMediator {
+ 
+    <span class="annotation">@Inject</span>
+    <span class="directive">public</span> ICommandProvider commandProvider;
+    <span class="annotation">@Inject</span>
+    <span class="directive">public</span> IEventSelectionModel eventSelectionModel;
+    <span class="annotation">@Inject</span>
+    <span class="directive">public</span> IEventListView view;
+ 
+    <span class="directive">public</span> <span class="type">void</span> loadEvents() {
+        LoadEventsCommand command = commandProvider.get(LoadEventsCommand.class);
+        command.setOnSucceeded(<span class="keyword">new</span> LoadEventsSucceedHandler());
+        command.start();
+    }
+ 
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="type">void</span> updateSelectedEvent(EventVO event) {
+        eventSelectionModel.setSelectedEvent(event);
+    }
+ 
+    <span class="directive">private</span> <span class="type">class</span> <span class="class">LoadEventsSucceedHandler</span> <span class="directive">implements</span> <span class="predefined-type">EventHandler</span>&lt;WorkerStateEvent&gt; {
+ 
+        <span class="annotation">@Override</span>
+        <span class="directive">public</span> <span class="type">void</span> handle(WorkerStateEvent workerStateEvent) {
+            view.updateEventList((<span class="predefined-type">List</span>&lt;EventVO&gt;)workerStateEvent.getSource().getValue());
+        }
+    }
+}
+</pre></td>
+</tr></table>
+</div>
+
+<h3 id="conclusion">Conclusion</h3>
+<p>In this post we&rsquo;ve covered the View layer and the rules that should be followed. It also showed how the View and the Mediator communicate with each other. In the next post I&rsquo;ll cover the application logic layer were we&rsquo;ll see how heavy application logic will be offloaded to a separate thread in a consistent way.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[JavaFx: Structuring your Application - Overview]]></title>
+    <link href="http://www.yennicktrevels.com/blog/2013/10/15/javafx-structuring-your-application-overview/"/>
+    <updated>2013-10-15T21:22:00+02:00</updated>
+    <id>http://www.yennicktrevels.com/blog/2013/10/15/javafx-structuring-your-application-overview</id>
+    <content type="html"><![CDATA[<p>JavaFx is a new rich client framework by Oracle. It allows you to create visually pleasing enterprise business applications with the Java language.<br />
+While many small demos are showing up in the community, there aren&rsquo;t many articles on how to structure your JavaFx application. Using a good structure makes it easier to maintain your application, add new features and improves overall stability.<br />
+These are all very important in enterprise applications.
+This serie of articles will try to remedy that by showing you one of many ways to structure your application. This is certainly not the only way to do it, but it will give you a starting point. Even this structure is open for improvement (as every structure is).</p>
+
+<!--more-->
+
+<p>This serie will consist of four blog posts:  </p>
+
+<ol>
+  <li>Overview (this blog post)</li>
+  <li>View layer</li>
+  <li>Application logic layer</li>
+  <li>Service - Application State layer</li>
+</ol>
+
+<h3 id="high-level-overview">High-level Overview</h3>
+<p>The structure I will describe is based on Robotlegs, an Apache Flex micro-architecture library. But instead of using events to decouple the layers, I went with for direct calls (with interfaces in-between). While events allow you to decouple the layers even more, I prefer direct calls with interfaces over events because they make it easier to follow the flow of your application.</p>
+
+<p>The diagram below shows the different components and layers in my architecture. The arrows indicate the dependencies.</p>
+
+<p><img src="http://www.yennicktrevels.com/images/posts/javafx-structure-overview.png" /></p>
+
+<p><strong>View:</strong> This is where the JavaFx components are used to build the UI.<br />
+<strong>Mediator:</strong> The mediator facilitates the communication between the view and the application logic layer. This is why it&rsquo;s both included in the view layer as the application logic layer. This layer should not contain application logic, it&rsquo;s just a postman who receives calls from the view and delegates them to the application logic layer and vise versa.<br />
+<strong>Command:</strong> This is where your application logic will reside. A Command is a class which executes a single unit of work and will be disposed when it&rsquo;s finished.<br />
+<strong>Service:</strong> A service is used to access external resources. This can be a remote service, a file on the filesystem or a device attached to the user&rsquo;s pc.<br />
+<strong>Model:</strong> A model stores the state of your application. This can be the selected record which should be accessible in multiple views.  </p>
+
+<p>The diagram below shows a sample flow of an application. In this case the user clicked on a button to delete a contact in a list.</p>
+
+<p><img src="http://www.yennicktrevels.com/images/posts/javafx-structure-flow.png" /></p>
+
+<ol>
+  <li>The view asks the mediator to delete the item by calling the deleteContact(contact) method on the IContactListMediator interface.</li>
+  <li>The mediator creates a new DeleteContactCommand and registers a success handler on it. Then it calls the start() method on the command.</li>
+  <li>The command calls the contact service to delete the contact from the database</li>
+  <li>The command calls a method on the model to remove the contact from the application state. It receives the updated list of contacts from the model</li>
+  <li>The command finishes and triggers the registered success listeners. It provides the updated list of contacts to the success handlers.</li>
+  <li>The success handler in the mediator asks the view to update the list of contacts based on the updated contact list it got from the command.</li>
+</ol>
+
+<h3 id="used-libraries">Used libraries</h3>
+<p>For my application I didn&rsquo;t use any framework (except for JavaFx, obviously), I wanted to create my own structure without the overhead of a framework. All I used was the JavaFx framework and Guice for dependency injection.<br />
+For those interested in build tools, I used the JavaFx Gradle plugin created by Danno Ferrin to create a build script.</p>
+
+<h3 id="dependency-injection">Dependency Injection</h3>
+
+<h4 id="mapping-your-dependencies">MAPPING YOUR DEPENDENCIES</h4>
+<p>A DI library like Guice allows you to inject instances of certain classes into other classes without you having to manually instantiate and inject them. This can greatly improve the quality of your code since you don&rsquo;t have to write all that yourself. Guice is basically the glue that holds your application together.</p>
+
+<p>In Guice you have to create a Module class which defines all the mappings. Such a module class can look like this for a simple application:</p>
+
+<div><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+<a href="#n8" name="n8">8</a>
+<a href="#n9" name="n9">9</a>
+<strong><a href="#n10" name="n10">10</a></strong>
+<a href="#n11" name="n11">11</a>
+<a href="#n12" name="n12">12</a>
+<a href="#n13" name="n13">13</a>
+<a href="#n14" name="n14">14</a>
+<a href="#n15" name="n15">15</a>
+<a href="#n16" name="n16">16</a>
+<a href="#n17" name="n17">17</a>
+<a href="#n18" name="n18">18</a>
+<a href="#n19" name="n19">19</a>
+<strong><a href="#n20" name="n20">20</a></strong>
+<a href="#n21" name="n21">21</a>
+<a href="#n22" name="n22">22</a>
+<a href="#n23" name="n23">23</a>
+<a href="#n24" name="n24">24</a>
+<a href="#n25" name="n25">25</a>
+<a href="#n26" name="n26">26</a>
+<a href="#n27" name="n27">27</a>
+<a href="#n28" name="n28">28</a>
+<a href="#n29" name="n29">29</a>
+<strong><a href="#n30" name="n30">30</a></strong>
+<a href="#n31" name="n31">31</a>
+<a href="#n32" name="n32">32</a>
+<a href="#n33" name="n33">33</a>
+<a href="#n34" name="n34">34</a>
+<a href="#n35" name="n35">35</a>
+<a href="#n36" name="n36">36</a>
+<a href="#n37" name="n37">37</a>
+<a href="#n38" name="n38">38</a>
+<a href="#n39" name="n39">39</a>
+<strong><a href="#n40" name="n40">40</a></strong>
+<a href="#n41" name="n41">41</a>
+<a href="#n42" name="n42">42</a>
+<a href="#n43" name="n43">43</a>
+<a href="#n44" name="n44">44</a>
+<a href="#n45" name="n45">45</a>
+<a href="#n46" name="n46">46</a>
+</pre></td>
+  <td class="code"><pre><span class="directive">public</span> <span class="type">class</span> <span class="class">EventManagerModule</span> <span class="directive">extends</span> AbstractModule {
+
+    <span class="annotation">@Override</span>
+    <span class="directive">protected</span> <span class="type">void</span> configure() {
+        bind(EventManagerModule.class).toInstance(<span class="local-variable">this</span>);
+
+        mapViews();
+        mapMediators();
+        mapCommands();
+        mapServices();
+        mapModels();
+        mapInfrastructure();
+    }
+
+    <span class="directive">private</span> <span class="type">void</span> mapViews() {
+        bind(IEventOverviewView.class).to(EventOverviewView.class);
+        bind(IEventListView.class).to(EventListView.class);
+        bind(IEventDetailView.class).to(EventDetailView.class);
+    }
+
+    <span class="directive">private</span> <span class="type">void</span> mapMediators() {
+        bind(IEventOverviewMediator.class).to(EventOverviewMediator.class);
+        bind(IEventListMediator.class).to(EventListMediator.class);
+        bind(IEventDetailMediator.class).to(EventDetailMediator.class);
+    }
+
+    <span class="directive">private</span> <span class="type">void</span> mapCommands() {
+        bind(ICommandProvider.class).to(CommandProvider);
+
+        bind(LoadEventsCommand.class);
+        bind(AcceptEventCommand.class);
+        bind(DeclineEventCommand.class);
+    }
+
+    <span class="directive">private</span> <span class="type">void</span> mapServices() {
+        bind(IEventService.class).to(StubEventService.class);
+    }
+
+    <span class="directive">private</span> <span class="type">void</span> mapModels() {
+        bind(IEventSelectionModel.class).to(EventSelectionModel.class).in(Singleton.class);
+    }
+
+    <span class="directive">private</span> <span class="type">void</span> mapInfrastructure() {
+        bind(ITranslationProvider.class).to(ResourceBundleTranslationProvider.class).in(Singleton.class);
+    }
+}
+</pre></td>
+</tr></table>
+</div>
+
+<p>So in most cases you will be mapping implementations to interfaces. Always try to use interfaces. This allows you to, for example, create a stub implementation of a service (in this case StubEventService) and a real implementation which you can then just swap by changing the Guice mapping.<br />
+Only for the Commands I didn&rsquo;t create interfaces because they wouldn&rsquo;t add that much value. They would all practically be marker services, but you&rsquo;ll see that in my following posts.</p>
+
+<p>While this Module implementation is ok for a small application, it can quickly explode in one huge class when you&rsquo;re building a bigger application. This is where bootstrap classes come in handy. A bootstrap class is just a class which initializes a certain part of your application. In this case it would initialize the mappings of the views, the mediators or the commands. Such a bootstrap class would look like this:</p>
+
+<div><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+<a href="#n8" name="n8">8</a>
+<a href="#n9" name="n9">9</a>
+<strong><a href="#n10" name="n10">10</a></strong>
+<a href="#n11" name="n11">11</a>
+<a href="#n12" name="n12">12</a>
+<a href="#n13" name="n13">13</a>
+<a href="#n14" name="n14">14</a>
+</pre></td>
+  <td class="code"><pre><span class="directive">public</span> <span class="type">class</span> <span class="class">MediatorMapper</span> <span class="directive">implements</span> Mapper {
+
+    <span class="directive">private</span> AbstractModule module;
+
+    <span class="directive">public</span> MediatorMapper(AbstractModule module) {
+        <span class="local-variable">this</span>.module = module;
+    }
+
+    <span class="directive">public</span> <span class="type">void</span> bootstrap() {
+        module.bind(IEventOverviewMediator.class).to(EventOverviewMediator.class);
+        module.bind(IEventListMediator.class).to(EventListMediator.class);
+        module.bind(IEventDetailMediator.class).to(EventDetailMediator.class);
+    }
+}
+</pre></td>
+</tr></table>
+</div>
+
+<p>Your module would then look like this:</p>
+
+<div><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+<a href="#n8" name="n8">8</a>
+<a href="#n9" name="n9">9</a>
+<strong><a href="#n10" name="n10">10</a></strong>
+<a href="#n11" name="n11">11</a>
+<a href="#n12" name="n12">12</a>
+<a href="#n13" name="n13">13</a>
+<a href="#n14" name="n14">14</a>
+</pre></td>
+  <td class="code"><pre><span class="directive">public</span> <span class="type">class</span> <span class="class">EventManagerModule</span> <span class="directive">extends</span> AbstractModule {
+
+    <span class="annotation">@Override</span>
+    <span class="directive">protected</span> <span class="type">void</span> configure() {
+        bind(EventManagerModule.class).toInstance(<span class="local-variable">this</span>)
+
+        <span class="keyword">new</span> ViewMapper(<span class="local-variable">this</span>).bootstrap();
+        <span class="keyword">new</span> MediatorMapper(<span class="local-variable">this</span>).bootstrap();
+        <span class="keyword">new</span> CommandMapper(<span class="local-variable">this</span>).bootstrap();
+        <span class="keyword">new</span> ServiceMapper(<span class="local-variable">this</span>).bootstrap();
+        <span class="keyword">new</span> ModelMapper(<span class="local-variable">this</span>).bootstrap();
+        <span class="keyword">new</span> ModelMapper(<span class="local-variable">this</span>).bootstrap();
+    }
+}
+</pre></td>
+</tr></table>
+</div>
+
+<h4 id="wiring-it-all-together">WIRING IT ALL TOGETHER</h4>
+<p>Now how do you wire all this together? Well, that is what I&rsquo;m going to show you now.</p>
+
+<p>In your Main class you will create a Guice Injector and with this injector you will instantiate the main view of your application. Your Main class will look like this:</p>
+
+<div><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+<a href="#n8" name="n8">8</a>
+<a href="#n9" name="n9">9</a>
+<strong><a href="#n10" name="n10">10</a></strong>
+<a href="#n11" name="n11">11</a>
+<a href="#n12" name="n12">12</a>
+<a href="#n13" name="n13">13</a>
+<a href="#n14" name="n14">14</a>
+<a href="#n15" name="n15">15</a>
+<a href="#n16" name="n16">16</a>
+<a href="#n17" name="n17">17</a>
+<a href="#n18" name="n18">18</a>
+<a href="#n19" name="n19">19</a>
+<strong><a href="#n20" name="n20">20</a></strong>
+<a href="#n21" name="n21">21</a>
+<a href="#n22" name="n22">22</a>
+<a href="#n23" name="n23">23</a>
+</pre></td>
+  <td class="code"><pre><span class="directive">public</span> <span class="type">class</span> <span class="class">Main</span> <span class="directive">extends</span> Application {
+
+    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main(<span class="predefined-type">String</span><span class="type">[]</span> args) {
+        Application.launch();
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="type">void</span> start(Stage stage) <span class="directive">throws</span> <span class="exception">Exception</span> {
+        Injector injector = Guice.createInjector(<span class="keyword">new</span> EventManagerModule());
+        EventOverviewView eventOverviewView = injector.getInstance(EventOverviewView.class);
+
+        Scene scene = SceneBuilder.create()
+                .root(
+                    eventOverviewView.getView()
+                ).width(<span class="integer">900</span>)
+                .height(<span class="integer">700</span>)
+                .build();
+        scene.getStylesheets().add(Main.class.getResource(<span class="string"><span class="delimiter">&quot;</span><span class="content">/EventManager.css</span><span class="delimiter">&quot;</span></span>).toExternalForm());
+
+        stage.setScene(scene);
+        stage.show();
+    }
+}
+</pre></td>
+</tr></table>
+</div>
+
+<p>The views that are being used in the main view are also injected in the main view. Also, the mediator that is behind the main view is also injected. This patterns is used for every view.</p>
+
+<div><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+<a href="#n8" name="n8">8</a>
+<a href="#n9" name="n9">9</a>
+<strong><a href="#n10" name="n10">10</a></strong>
+<a href="#n11" name="n11">11</a>
+</pre></td>
+  <td class="code"><pre><span class="directive">public</span> <span class="type">class</span> <span class="class">EventOverviewView</span> <span class="directive">implements</span> IEventOverviewView {
+
+    <span class="annotation">@Inject</span>
+    <span class="directive">public</span> IEventOverviewMediator mediator;
+    <span class="annotation">@Inject</span>
+    <span class="directive">public</span> EventListView eventListView;
+    <span class="annotation">@Inject</span>
+    <span class="directive">public</span> EventDetailView eventDetailView;
+
+    ...
+}
+</pre></td>
+</tr></table>
+</div>
+
+<p>Then, in the mediator, we inject the view and the commandProvider (this is a class which allows to create command instances on the fly).</p>
+
+<div><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+<a href="#n8" name="n8">8</a>
+<a href="#n9" name="n9">9</a>
+</pre></td>
+  <td class="code"><pre><span class="directive">public</span> <span class="type">class</span> <span class="class">EventOverviewMediator</span> <span class="directive">implements</span> IEventOverviewMediator {
+
+    <span class="annotation">@Inject</span>
+    <span class="directive">public</span> IEventOverviewView view;
+    <span class="annotation">@Inject</span>
+    <span class="directive">public</span> CommandProvider commandProvider;
+
+    ...
+}
+</pre></td>
+</tr></table>
+</div>
+
+<p>And in the application logic layer we inject the service/model in the command.</p>
+
+<div><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+</pre></td>
+  <td class="code"><pre><span class="directive">public</span> <span class="type">class</span> <span class="class">LoadEventsCommand</span> <span class="directive">extends</span> Service&lt;<span class="predefined-type">List</span>&lt;EventVO&gt;&gt; {
+
+    <span class="annotation">@Inject</span>
+    <span class="directive">public</span> IEventService eventService;
+
+    ...
+}
+</pre></td>
+</tr></table>
+</div>
+
+<h3 id="conclusion">Conclusion</h3>
+<p>In this post I gave a broad overview of the structure and explained how dependency injection fits into this.<br />
+In the following posts I will go into more detail for each layer and give some best practices.<br />
+You can find the full sample application here: <a href="https://github.com/SlevinBE/JavaFx-structure-demo">https://github.com/SlevinBE/JavaFx-structure-demo</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Automated Gradle project deployment to Sonatype OSS Repository]]></title>
+    <link href="http://www.yennicktrevels.com/blog/2013/10/11/automated-gradle-project-deployment-to-sonatype-oss-repository/"/>
+    <updated>2013-10-11T21:53:00+02:00</updated>
+    <id>http://www.yennicktrevels.com/blog/2013/10/11/automated-gradle-project-deployment-to-sonatype-oss-repository</id>
+    <content type="html"><![CDATA[<p>This post will walk you through the steps to deploy your gradle project to the Sonatype OSS staging repository.</p>
+
+<!--more-->
+
+<h3 id="prerequisites">PREREQUISITES</h3>
+
+<ul>
+  <li>Minimum Gradle 1.0 milestone 5</li>
+  <li>Gpg4zin, you can find the installer on this website: http://www.gpg4win.org/</li>
+</ul>
+
+<h3 id="configuring-your-buildgradle-file">CONFIGURING YOUR BUILD.GRADLE FILE</h3>
+<p>First you&rsquo;ll need to configure your build script (build.gradle file). A full working build script of my GradleFx project can be found here:<br />
+https://github.com/GradleFx/GradleFx/blob/develop/build.gradle</p>
+
+<p>These are the steps:</p>
+
+<p>Apply the maven and signing plugins. The signing plugin will sign your jar and pom files, which is required for deployment to the Sonatype OSS repository.</p>
+
+<div><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+</pre></td>
+  <td class="code"><pre>apply <span class="key">plugin</span>: <span class="string"><span class="delimiter">'</span><span class="content">maven</span><span class="delimiter">'</span></span>
+apply <span class="key">plugin</span>: <span class="string"><span class="delimiter">'</span><span class="content">signing</span><span class="delimiter">'</span></span>
+</pre></td>
+</tr></table>
+</div>
+
+<p>Specify the group and version of your project:</p>
+
+<div><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+</pre></td>
+  <td class="code"><pre>group = <span class="string"><span class="delimiter">'</span><span class="content">org.gradlefx</span><span class="delimiter">'</span></span>
+version = <span class="string"><span class="delimiter">'</span><span class="content">0.3.1</span><span class="delimiter">'</span></span>
+</pre></td>
+</tr></table>
+</div>
+
+<p>Define tasks for source and javadoc jar generation. These jars are also required for Sonatype:</p>
+
+<div><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+<a href="#n8" name="n8">8</a>
+<a href="#n9" name="n9">9</a>
+</pre></td>
+  <td class="code"><pre>task javadocJar(<span class="key">type</span>: Jar, <span class="key">dependsOn</span>: javadoc) {
+    classifier = <span class="string"><span class="delimiter">'</span><span class="content">javadoc</span><span class="delimiter">'</span></span>
+    from <span class="string"><span class="delimiter">'</span><span class="content">build/docs/javadoc</span><span class="delimiter">'</span></span>
+}
+
+task sourcesJar(<span class="key">type</span>: Jar) {
+    from sourceSets.main.allSource
+    classifier = <span class="string"><span class="delimiter">'</span><span class="content">sources</span><span class="delimiter">'</span></span>
+}
+</pre></td>
+</tr></table>
+</div>
+
+<p>Specify your artifacts:</p>
+
+<div><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+</pre></td>
+  <td class="code"><pre>artifacts {
+    archives jar
+
+    archives javadocJar
+    archives sourcesJar
+}
+</pre></td>
+</tr></table>
+</div>
+
+<p>Configure the signing task by specifying which artifacts to sign, in this case all the artifacts in the archives configuration. This will not yet include the pom file, which will be signed later.</p>
+
+<div><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+</pre></td>
+  <td class="code"><pre>signing {
+    sign configurations.archives
+}
+</pre></td>
+</tr></table>
+</div>
+
+<p>Then we need to configure the generated pom file, sign the pom file and configure the Sonatype OSS staging repository.<br />
+The <strong>&lsquo;beforeDeployment&rsquo;</strong> line will sign the pom file right before the artifacts are deployed to the Sonatype OSS repository.<br />
+The <strong>&lsquo;repository&rsquo;</strong> part configures the Sonatype OSS staging repository. Notice the sonatypeUsername and sonatypePassword variables, these are property variables to which I&rsquo;ll come back to later in this post.<br />
+The <strong>&lsquo;pom.project&rsquo;</strong> section configures the generated pom files, you need to specify all this information because it&rsquo;s required for the Sonatype repository (and Maven Central).</p>
+
+<div><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+<a href="#n8" name="n8">8</a>
+<a href="#n9" name="n9">9</a>
+<strong><a href="#n10" name="n10">10</a></strong>
+<a href="#n11" name="n11">11</a>
+<a href="#n12" name="n12">12</a>
+<a href="#n13" name="n13">13</a>
+<a href="#n14" name="n14">14</a>
+<a href="#n15" name="n15">15</a>
+<a href="#n16" name="n16">16</a>
+<a href="#n17" name="n17">17</a>
+<a href="#n18" name="n18">18</a>
+<a href="#n19" name="n19">19</a>
+<strong><a href="#n20" name="n20">20</a></strong>
+<a href="#n21" name="n21">21</a>
+<a href="#n22" name="n22">22</a>
+<a href="#n23" name="n23">23</a>
+<a href="#n24" name="n24">24</a>
+<a href="#n25" name="n25">25</a>
+<a href="#n26" name="n26">26</a>
+<a href="#n27" name="n27">27</a>
+<a href="#n28" name="n28">28</a>
+<a href="#n29" name="n29">29</a>
+<strong><a href="#n30" name="n30">30</a></strong>
+<a href="#n31" name="n31">31</a>
+<a href="#n32" name="n32">32</a>
+<a href="#n33" name="n33">33</a>
+<a href="#n34" name="n34">34</a>
+<a href="#n35" name="n35">35</a>
+<a href="#n36" name="n36">36</a>
+<a href="#n37" name="n37">37</a>
+<a href="#n38" name="n38">38</a>
+<a href="#n39" name="n39">39</a>
+<strong><a href="#n40" name="n40">40</a></strong>
+<a href="#n41" name="n41">41</a>
+<a href="#n42" name="n42">42</a>
+<a href="#n43" name="n43">43</a>
+</pre></td>
+  <td class="code"><pre>uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -&gt; signing.signPom(deployment) }
+
+            repository(<span class="key">url</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">https://oss.sonatype.org/service/local/staging/deploy/maven2/</span><span class="delimiter">&quot;</span></span>) {
+              authentication(<span class="key">userName</span>: sonatypeUsername, <span class="key">password</span>: sonatypePassword)
+            }
+
+            pom.project {
+               name <span class="string"><span class="delimiter">'</span><span class="content">GradleFx</span><span class="delimiter">'</span></span>
+               packaging <span class="string"><span class="delimiter">'</span><span class="content">jar</span><span class="delimiter">'</span></span>
+               description <span class="string"><span class="delimiter">'</span><span class="content">GradleFx is a Gradle plugin for building Flex and Actionscript applications</span><span class="delimiter">'</span></span>
+               url <span class="string"><span class="delimiter">'</span><span class="content">http://gradlefx.github.com/</span><span class="delimiter">'</span></span>
+
+               scm {
+                   url <span class="string"><span class="delimiter">'</span><span class="content">scm:git@github.com:GradleFx/GradleFx.git</span><span class="delimiter">'</span></span>
+                   connection <span class="string"><span class="delimiter">'</span><span class="content">scm:git@github.com:GradleFx/GradleFx.git</span><span class="delimiter">'</span></span>
+                   developerConnection <span class="string"><span class="delimiter">'</span><span class="content">scm:git@github.com:GradleFx/GradleFx.git</span><span class="delimiter">'</span></span>
+               }
+
+               licenses {
+                   license {
+                       name <span class="string"><span class="delimiter">'</span><span class="content">The Apache Software License, Version 2.0</span><span class="delimiter">'</span></span>
+                       url <span class="string"><span class="delimiter">'</span><span class="content">http://www.apache.org/licenses/LICENSE-2.0.txt</span><span class="delimiter">'</span></span>
+                       distribution <span class="string"><span class="delimiter">'</span><span class="content">repo</span><span class="delimiter">'</span></span>
+                   }
+               }
+
+               developers {
+                   developer {
+                       id <span class="string"><span class="delimiter">'</span><span class="content">yennicktrevels</span><span class="delimiter">'</span></span>
+                       name <span class="string"><span class="delimiter">'</span><span class="content">Yennick Trevels</span><span class="delimiter">'</span></span>
+                   }
+                   developer {
+                       id <span class="string"><span class="delimiter">'</span><span class="content">stevendick</span><span class="delimiter">'</span></span>
+                       name <span class="string"><span class="delimiter">'</span><span class="content">Steven Dick</span><span class="delimiter">'</span></span>
+                   }
+               }
+           }
+        }
+    }
+}
+</pre></td>
+</tr></table>
+</div>
+
+<p>That&rsquo;s it for the configuration of your build script.</p>
+
+<h3 id="initial-setup">INITIAL SETUP</h3>
+<p>There are a couple of thing you need to do before you can run the build automatically, like:
+Register your project at Sonatype
+Create a public key pair to sign your jar/pom files
+Create a gradle properties file</p>
+
+<h4 id="register-your-project-at-sonatype">Register your project at Sonatype</h4>
+
+<p>First you&rsquo;ll need to register your project at sonatype. Follow the &ldquo;2. Sign Up&rdquo; and &ldquo;3. Create a JIRA ticket&rdquo; sections on this page: https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide</p>
+
+<h4 id="create-a-public-key-pair">Create a public key pair</h4>
+
+<p>A public key pair is needed to sign your jar/pom files. To generate this we need to dive into command line. Follow the &ldquo;Generate a key pair&rdquo; and &ldquo;Distributing your public key&rdquo; sections on this page: https://docs.sonatype.org/display/Repository/How+To+Generate+PGP+Signatures+With+Maven
+This will generate a key that will be stored on your computer and on sks-keyservers.net. Remember the password because there is no way to reset or restore it when you forget it.</p>
+
+<h4 id="create-a-gradle-properties-file">Create a gradle properties file</h4>
+
+<p>Now we&rsquo;ll have to create a gradle.properties file which will contain the public key and sonatype login information.<br />
+Because this is sensitive information it&rsquo;s best to store this file in your &ldquo;.gradle&rdquo; directory (e.g. D:\Users\MyUsername.gradle) and not under your project.<br />
+This properties file is used by your gradle build script. The signing.* properties are used and defined by the signing task, the sonatypeUsername and sonatypePassword properties are the variables we defined earlier in our build script.  </p>
+
+<p>So first create the &ldquo;gradle.properties&rdquo; file under D:\Users\MyUsername.gradle<br />
+Then add the following properties to the file and change their values:</p>
+
+<div><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+</pre></td>
+  <td class="code"><pre>signing.keyId=A5DOA652
+signing.password=YourPublicKeyPassword
+signing.secretKeyRingFile=D:/Users/MyUsername/AppData/Roaming/gnupg/secring.gpg
+
+sonatypeUsername=YourSonatypeJiraUsername
+sonatypePassword=YourSonatypeJiraPassword
+</pre></td>
+</tr></table>
+</div>
+
+<p>the signing.keyId property is the public key id, you can list your keys with the &ldquo;gpg &ndash;list-keys&rdquo; command. With this command you&rsquo;ll get an output like this:</p>
+
+<div><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+</pre></td>
+  <td class="code"><pre>pub 2048R/A5DOA652 2011-10-16
+uid MyUid
+sub 2048R/F66623G0 2011-10-16
+</pre></td>
+</tr></table>
+</div>
+
+<p>That&rsquo;s it for the initial setup.</p>
+
+<h3 id="deployment-to-the-sonatype-oss-repository">DEPLOYMENT TO THE SONATYPE OSS REPOSITORY</h3>
+<p>Once you&rsquo;ve done all the previous steps in this post you can deploy your project with just one single command: &ldquo;gradle uploadArchives&rdquo;</p>
+]]></content>
+  </entry>
+  
+</feed>
