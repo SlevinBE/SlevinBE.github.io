@@ -3,7 +3,8 @@ layout: post
 title: "JavaFx: Structuring your Application - Service and Application State layer"
 date: 2013-10-15 22:59
 comments: false
-categories: 
+categories: JavaFx
+keywords: JavaFx architecture service application state
 ---
 
 This post is part of a series of blog posts about structuring your JavaFx application.  

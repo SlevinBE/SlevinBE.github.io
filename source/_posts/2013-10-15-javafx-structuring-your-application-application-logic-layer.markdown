@@ -3,7 +3,8 @@ layout: post
 title: "JavaFx: Structuring your Application - Application Logic Layer"
 date: 2013-10-15 22:49
 comments: false
-categories: 
+categories: JavaFx
+keywords: JavaFx architecture application logic
 ---
 This post is part of a series of blog posts about structuring your JavaFx application.  
 Because this architecture is targeting fat clients which have all the business logic on the client side it is important to structure this in an organized and efficient way. In this post I'll explain how you can organize your application logic in a way that it won't block the UI. 

@@ -3,7 +3,8 @@ layout: post
 title: "JavaFx: Structuring your Application - View Layer"
 date: 2013-10-15 22:32
 comments: false
-categories: 
+categories: JavaFx
+keywords: JavaFx architecture view layer
 ---
 
 This post is part of a series of blog posts about structuring your JavaFx application.  

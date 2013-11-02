@@ -3,7 +3,8 @@ layout: post
 title: "JavaFx: Structuring your Application - Overview"
 date: 2013-10-15 21:22
 comments: false
-categories: 
+categories: JavaFx
+keywords: JavaFx architecture
 ---
 JavaFx is a new rich client framework by Oracle. It allows you to create visually pleasing enterprise business applications with the Java language.  
 While many small demos are showing up in the community, there aren't many articles on how to structure your JavaFx application. Using a good structure makes it easier to maintain your application, add new features and improves overall stability.  

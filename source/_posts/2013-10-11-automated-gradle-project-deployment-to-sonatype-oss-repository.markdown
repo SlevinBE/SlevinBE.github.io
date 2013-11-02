@@ -3,7 +3,8 @@ layout: post
 title: "Automated Gradle project deployment to Sonatype OSS Repository"
 date: 2013-10-11 21:53
 comments: false
-categories: 
+categories: Gradle
+keywords: Gradle Sonatype OSS
 ---
 
 This post will walk you through the steps to deploy your gradle project to the Sonatype OSS staging repository.
