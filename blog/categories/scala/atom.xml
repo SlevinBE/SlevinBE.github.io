@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Scala | Yennick Trevels]]></title>
+  <link href="http://www.yennicktrevels.com/blog/categories/scala/atom.xml" rel="self"/>
+  <link href="http://www.yennicktrevels.com/"/>
+  <updated>2013-11-29T19:49:21+01:00</updated>
+  <id>http://www.yennicktrevels.com/</id>
+  <author>
+    <name><![CDATA[Yennick Trevels]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[My View On: Functional Programming Principles in Scala Course]]></title>
+    <link href="http://www.yennicktrevels.com/blog/2013/11/29/my-view-on-functional-programming-principles-in-scala-course/"/>
+    <updated>2013-11-29T20:00:00+01:00</updated>
+    <id>http://www.yennicktrevels.com/blog/2013/11/29/my-view-on-functional-programming-principles-in-scala-course</id>
+    <content type="html"><![CDATA[<p>This post provides my view on the functional programming course on Coursera, which I&rsquo;ve completed with distinction.
+It gives an overview of the lows and highs that I experienced during this course and what I&rsquo;ve learned from it.</p>
+
+<!--more-->
+
+<blockquote>
+  <p>Disclaimer: I don&rsquo;t have a university degree, but I have a professional Bachelor degree. 
+So my experience and ways of learning have been mostly practical instead of heavily based on theory or lots of math. 
+I have been a Java/Flex software engineer for 6+ years now and have been implementing big enterprise projects since the beginning.
+Your experience and view on this course may greatly differ from mine based on your current experience and education.</p>
+</blockquote>
+
+<h3 id="why-did-i-take-this-course">Why did I take this course?</h3>
+<p>A couple of months ago I decided to learn the Typesafe stack, but quickly came to the conclusion that I had to learn Scala to take full 
+advantage of all its features. <br />
+Meanwhile, there was all this buzz going on about something called &ldquo;functional programming&rdquo;. All I heard was &ldquo;closures, closures, closures&rdquo;, but
+I was sure there had to be more to this than only closures. Right around that moment, the Functional Programming Principles in Scala course was
+announced again and I decided to take on the challenge.</p>
+
+<h3 id="about-the-course">About the course</h3>
+<p>This course was given by Martin Odersky, designer of the Scala programming language, professor at the EPFL and founder of Typesafe Inc. <br />
+The course was seven weeks long and each week you received about 1-2 hours of video lectures and an assignment. For every assignment you receive
+a grade and you needed to obtain an average of 60% to pass the course and 80% to receive distinction. 
+More info can be found here: <a href="https://www.coursera.org/course/progfun">https://www.coursera.org/course/progfun</a></p>
+
+<h3 id="week-1--2">Week 1 &amp; 2</h3>
+<p>Content:</p>
+
+<ul>
+  <li>Functions &amp; Evaluations</li>
+  <li>Higher Order Functions</li>
+</ul>
+
+<p>These two weeks were pretty hard for me, mostly because both the lectures and assignments where highly academical. By that I mean that many of
+the examples given during the lectures were based on math or some other sort of theory, which made them more complex than they needed to be.<br />
+The same was true for some of the assignments (e.g. Pascal&rsquo;s Triangle and counting change). Overall I feel that the explanations and some 
+of the assignments where unnecessary complex and could&rsquo;ve been much better without the added complexity of math puzzles (which isn&rsquo;t the focus of this course).<br />
+At the end of these two weeks I was asking myself whether this was the right course for me. But I decided to push on and hope for improvements because at its core
+it was still teaching me new things about Scala and functional programming.</p>
+
+<h3 id="week-3---7">Week 3 - 7</h3>
+<p>Content:</p>
+
+<ul>
+  <li>Data and Abstraction</li>
+  <li>Types and Pattern Matching</li>
+  <li>Lists</li>
+  <li>Collections</li>
+  <li>Lazy Evaluations</li>
+</ul>
+
+<p>During all these last weeks of the course I had the same feeling. Some of the lectures where still too academical for my personal taste, but I started using the
+<a href="http://twitter.github.io/scala_school/">Twitter Scala School page</a> for when something wasn&rsquo;t so clear during the lectures. I can&rsquo;t recommend this page enough as the
+explanations on there are concise with small simple examples. 
+The assignments got more practical in nature and in most cases didn&rsquo;t require the knowledge of how to solve some mathematical problem, and when they did the assignments 
+guided you through it. They were still quite hard to solve, but fair. The satisfaction after submitting the assignment and seeing that &lsquo;10/10&rsquo; score show up became 
+addicting and wanted me to try for nothing less during the next assignment. </p>
+
+<h3 id="conclusion">Conclusion</h3>
+<p>As I mentioned several times during this write-up I felt that the lectures could&rsquo;ve been better with easier to understand examples and that some of the assignments
+had some unnecessary complexity involved with it. But overall this course was certainly worth my time and I learned a lot from it. I now have a clear understanding of
+functional programming and got used to writing some Scala code. Mission accomplished! </p>
+
+<p>As for time spend on this course, prepare yourself for some commitment since you probably won&rsquo;t have enough with the minimum 5 hours advertised on the course page (at 
+least I didn&rsquo;t). The lectures will take up about 1-2 hours a week and the assignments took me something between 4-7 hours to complete.</p>
+
+<p>To finish this off, I&rsquo;ll end with some tips for those who want to take this course the next time it starts:</p>
+
+<ul>
+  <li>If you&rsquo;re stuck on an assignment, use the discussion forums! They have a wealth of information on it and you&rsquo;ll probably find someone who&rsquo;s stuck on the same part.
+Also, the technical assistants (TA&rsquo;s) can help you out in most cases, so don&rsquo;t be afraid to ask for help.</li>
+  <li>If a lecture isn&rsquo;t clear for you, use the <a href="http://twitter.github.io/scala_school/">Twitter Scala School page</a> or some other resource for some explanation. </li>
+  <li>When you&rsquo;re not feeling motivated to continue because it&rsquo;s too hard, try to persist. It&rsquo;s really worth it.</li>
+</ul>
+]]></content>
+  </entry>
+  
+</feed>
