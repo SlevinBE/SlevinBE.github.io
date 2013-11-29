@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "My View On: Functional Programming Principles in Scala Course"
-date: 2013-11-28 20:37
+date: 2013-11-29 20:00
 comments: false
 categories: Scala
 keywords: Scala functional coursera
