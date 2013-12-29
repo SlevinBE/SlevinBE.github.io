@@ -4,7 +4,7 @@
   <title><![CDATA[Yennick Trevels]]></title>
   <link href="http://www.yennicktrevels.com/atom.xml" rel="self"/>
   <link href="http://www.yennicktrevels.com/"/>
-  <updated>2013-11-29T19:49:21+01:00</updated>
+  <updated>2013-12-29T13:54:16+01:00</updated>
   <id>http://www.yennicktrevels.com/</id>
   <author>
     <name><![CDATA[Yennick Trevels]]></name>
@@ -12,6 +12,88 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[My 2013: Achievements Unlocked!]]></title>
+    <link href="http://www.yennicktrevels.com/blog/2013/12/29/my-2013-achievements-unlocked-slash/"/>
+    <updated>2013-12-29T11:52:00+01:00</updated>
+    <id>http://www.yennicktrevels.com/blog/2013/12/29/my-2013-achievements-unlocked-slash</id>
+    <content type="html"><![CDATA[<p>At the end of every year I like to summarize what I&rsquo;ve accomplished during that year. This helps me set goals for the next year and gives a clear indication
+whether I&rsquo;m on track for my long-term goals.<br />
+This is the first year I&rsquo;m writing this down in a blog post, visible to everyone, but that (and other things) will keep me pushing forward. 
+So without further ado, my list of achievements of 2013.</p>
+
+<!--more-->
+
+<h3 id="technological-achievements">Technological Achievements</h3>
+
+<h4 id="javafx">JavaFx</h4>
+
+<p><a href="http://www.youtube.com/watch?feature=player_embedded&amp;v=WcdeBb0iP4k " target="_blank"><img src="http://img.youtube.com/vi/WcdeBb0iP4k/0.jpg" alt="JavaFx on Android video" width="240" height="180" border="10" style="float:right; margin-left: 10px" /></a></p>
+
+<p>Next to Flex, I&rsquo;m making JavaFx my other front-end focus. So I&rsquo;ve done quite a few things in JavaFx this year.</p>
+
+<ul>
+  <li><strong>JavaFx Intro presentation</strong> @ iDA MediaFoundry (with demo application)</li>
+  <li><strong>Four blog posts</strong> about structuring a JavaFx application: <a href="http://yennicktrevels.com/blog/2013/10/15/javafx-structuring-your-application-overview/">Overview</a>, <a href="http://yennicktrevels.com/blog/2013/10/15/javafx-structuring-your-application-view-layer/">View Layer</a>, <a href="http://yennicktrevels.com/blog/2013/10/15/javafx-structuring-your-application-application-logic-layer/">Application Logic Layer</a>, <a href="http://yennicktrevels.com/blog/2013/10/15/javafx-structuring-your-application-service-and-application-state-layer/">Service and Application State Layer</a></li>
+  <li><strong>Deployed my JavaFx demo application on Android</strong> while also giving it a mobile friendly UI</li>
+</ul>
+
+<h4 id="courses">Courses</h4>
+
+<p>This year I decided to learn Scala and the Typesafe stack. To get started I decided to take some courses on Coursera which turned out to be excellent.</p>
+
+<ul>
+  <li><strong><a href="https://www.coursera.org/course/progfun">Functional Programming Principles in Scala</a>:</strong> This got me started with the Scala syntax and the functional programming paradigm. This course was 7 weeks long and I had to invest around 10 hours a week to view the lectures and complete the assignments. I completed it with distinction.</li>
+  <li><strong><a href="https://www.coursera.org/course/reactive">Principles of Reactive Programming</a>:</strong> The follow-up course of the previous one. This extended my Scala knowledge quite a bit while also learning lot&rsquo;s of things about reactive programming (futures, promises, akka, &hellip;). This course was also 7 weeks long and I had to invest around 10 hours a week to view the lectures and complete the assignments. Grading in progress.</li>
+</ul>
+
+<h4 id="open-source">Open Source</h4>
+
+<p>I&rsquo;ve also released three versions of <a href="http://gradlefx.org/">GradleFx</a>, of which I&rsquo;m the co-founder. </p>
+
+<ul>
+  <li><strong>Version 0.7:</strong> This was release that brought support for building Flex-based mobile applications. Most of this implementation was developed by Denis Rykovanov. I finished up the code, created sample projects, wrote the documentation and deployed the release.</li>
+  <li><strong>Version 0.7.1:</strong> This was a small maintenance release.</li>
+  <li><strong>Version 0.8:</strong> In this release I completely overhauled the FlexUnit integration, which was one of the pain points of GradleFx.</li>
+</ul>
+
+<p><img src="http://www.yennicktrevels.com/images/posts/gradlefx-2013-downloads-chart.png" /></p>
+
+<h4 id="websites">Websites</h4>
+
+<p><img class="left" src="http://www.yennicktrevels.com/images/posts/dailyhugs-screenshot.jpg" />  </p>
+
+<p>I released two websites this year:</p>
+
+<ul>
+  <li><strong><a href="http://dailyhugs.be/">dailyhugs.be (my parents site)</a>:</strong> For this one I learned CakePHP (for the framework), LESS (for CSS), Twitter Bootstrap and JQuery. I had some experience before with PHP, but it was a bit rusty.
+In the end this site turned out great for my parents since they can now manage the content via a user-friendly administration section.</li>
+  <li><strong><a href="http://yennicktrevels.com">yennicktrevels.com</a>:</strong> I&rsquo;ve build my personal site with Octopress. I wanted to move my blog from Blogger to a more professional environment while also displaying my interests on the homepage.</li>
+</ul>
+
+<p><br />
+<br />
+<br />
+<br /></p>
+
+<h3 id="personal-achievements">Personal Achievements</h3>
+
+<p><img class="right" src="http://www.yennicktrevels.com/images/posts/toyota-gt86.jpg" /></p>
+
+<ul>
+  <li><strong>Lost 16 kilo&rsquo;s (35 pounds) in 4.5 months:</strong> I finally decided to do something about my weight. Ever since I got my own place I was gaining weight year after year. What made this even worse is that I hate to exercise. Turned out going to a dietitian was the solution for me which provided me with a good eating schedule and a list of allowed products (no exercise, yay!).</li>
+  <li><strong>Repaved our driveway</strong> (about 180 square meter) and <strong>build a new carport and shed</strong> to store our garden tools.</li>
+  <li>Scratched one thing off my bucket list, <strong>I bought a sports car</strong>. The Toyota GT86, the 2012&rsquo;s car of the year by Top Gear magazine.</li>
+</ul>
+
+<h3 id="conclusion">Conclusion</h3>
+
+<p>So overall it has been a really busy year. I&rsquo;ve learned a lot, accomplished many things and I&rsquo;m planning to do the same next year.<br />
+Have you already made up your list of 2013 or your plans for 2014? Make sure to do it as it will help you greatly in achieving your goals.
+See you next year!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[My View On: Functional Programming Principles in Scala Course]]></title>
