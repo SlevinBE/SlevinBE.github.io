@@ -37,8 +37,9 @@ This year I decided to learn Scala and the Typesafe stack. To get started I deci
 
 #### Open Source
 
-I've also released three versions of [GradleFx](http://gradlefx.org/), of which I'm the co-founder. 
+I've also released five versions of [GradleFx](http://gradlefx.org/), of which I'm the co-founder. 
 
+* **Version 0.6.3 and 0.6.4:** These were both maintenance releases.
 * **Version 0.7:** This was release that brought support for building Flex-based mobile applications. Most of this implementation was developed by Denis Rykovanov. I finished up the code, created sample projects, wrote the documentation and deployed the release.
 * **Version 0.7.1:** This was a small maintenance release.
 * **Version 0.8:** In this release I completely overhauled the FlexUnit integration, which was one of the pain points of GradleFx.
