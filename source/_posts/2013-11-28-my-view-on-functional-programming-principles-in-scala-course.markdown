@@ -1,10 +1,11 @@
 ---
 layout: post
 title: "My View On: Functional Programming Principles in Scala Course"
+description: Gives an overview of the functional programming principles in Scala course on Coursera and how it went for me
 date: 2013-11-29 20:00
 comments: false
 categories: Scala
-keywords: Scala functional coursera
+keywords: scala, functional programming, principles, coursera, course, martin odersky, typesafe, review, advice
 ---
 
 This post provides my view on the functional programming course on Coursera, which I've completed with distinction.

@@ -1,10 +1,11 @@
 ---
 layout: post
 title: "JavaFx: Structuring your Application - View Layer"
+description: Explains how the view layer of a fat client JavaFx application can be structured
 date: 2013-10-15 22:32
 comments: false
 categories: JavaFx
-keywords: JavaFx architecture view layer
+keywords: javafx, fat client, rich client, architecture, view layer, fxml, mediator, dependency injection
 ---
 
 This post is part of a series of blog posts about structuring your JavaFx application.  

@@ -1,10 +1,11 @@
 ---
 layout: post
 title: "JavaFx: Structuring your Application - Overview"
+description: Gives an overview of how you can structure a fat client JavaFx application
 date: 2013-10-15 21:22
 comments: false
 categories: JavaFx
-keywords: JavaFx architecture
+keywords: javafx, fat client, architecture, rich client, view layer, application logic, business logic, state, service, dependency injection, view, mediator, command pattern, service, model, guice
 ---
 JavaFx is a new rich client framework by Oracle. It allows you to create visually pleasing enterprise business applications with the Java language.  
 While many small demos are showing up in the community, there aren't many articles on how to structure your JavaFx application. Using a good structure makes it easier to maintain your application, add new features and improves overall stability.  
@@ -25,7 +26,7 @@ The structure I will describe is based on Robotlegs, an Apache Flex micro-archit
 
 The diagram below shows the different components and layers in my architecture. The arrows indicate the dependencies.
 
-{% img /images/posts/javafx-structure-overview.png %}
+{% img /images/posts/javafx-structure-overview.png layers overview %}
 
 **View:** This is where the JavaFx components are used to build the UI.  
 **Mediator:** The mediator facilitates the communication between the view and the application logic layer. This is why it's both included in the view layer as the application logic layer. This layer should not contain application logic, it's just a postman who receives calls from the view and delegates them to the application logic layer and vise versa.  
@@ -35,7 +36,7 @@ The diagram below shows the different components and layers in my architecture. 
 
 The diagram below shows a sample flow of an application. In this case the user clicked on a button to delete a contact in a list.
 
-{% img /images/posts/javafx-structure-flow.png %}
+{% img /images/posts/javafx-structure-flow.png communication flow between layers %}
 
 1. The view asks the mediator to delete the item by calling the deleteContact(contact) method on the IContactListMediator interface.
 2. The mediator creates a new DeleteContactCommand and registers a success handler on it. Then it calls the start() method on the command.

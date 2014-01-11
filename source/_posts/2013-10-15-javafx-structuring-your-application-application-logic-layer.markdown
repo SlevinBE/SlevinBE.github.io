@@ -1,10 +1,11 @@
 ---
 layout: post
 title: "JavaFx: Structuring your Application - Application Logic Layer"
+description: Explains how you can structure your application logic in a fat client JavaFx application
 date: 2013-10-15 22:49
 comments: false
 categories: JavaFx
-keywords: JavaFx architecture application logic
+keywords: JavaFx, fat client, architecture, application logic, business logic, command pattern
 ---
 This post is part of a series of blog posts about structuring your JavaFx application.  
 Because this architecture is targeting fat clients which have all the business logic on the client side it is important to structure this in an organized and efficient way. In this post I'll explain how you can organize your application logic in a way that it won't block the UI. 

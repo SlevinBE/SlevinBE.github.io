@@ -1,10 +1,11 @@
 ---
 layout: post
 title: "JavaFx: Structuring your Application - Service and Application State layer"
+description: Explains how you can structure your services and store application state in a fat client JavaFx application
 date: 2013-10-15 22:59
 comments: false
 categories: JavaFx
-keywords: JavaFx architecture service application state
+keywords: javafx, fat client, rich client, architecture, service, application state, model
 ---
 
 This post is part of a series of blog posts about structuring your JavaFx application.  

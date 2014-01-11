@@ -1,10 +1,11 @@
 ---
 layout: post
 title: "My 2013: Achievements Unlocked!"
+description: An overview of what I accomplished during 2013 both technically and on a personal level
 date: 2013-12-29 11:52
 comments: false
 categories: personal
-keywords: 2013 achievements yennick
+keywords: 2013, achievements, accomplishments, javafx, scala, akka, functional programming, reactive programming, course, web development, open source, gradlefx
 ---
 
 At the end of every year I like to summarize what I've accomplished during that year. This helps me set goals for the next year and gives a clear indication
@@ -44,11 +45,11 @@ I've also released five versions of [GradleFx](http://gradlefx.org/), of which I
 * **Version 0.7.1:** This was a small maintenance release.
 * **Version 0.8:** In this release I completely overhauled the FlexUnit integration, which was one of the pain points of GradleFx.
 
-{% img /images/posts/gradlefx-2013-downloads-chart.png %}
+{% img /images/posts/gradlefx-2013-downloads-chart.png GradleFx downloads chart %}
 
 #### Websites
 
-{% img left /images/posts/dailyhugs-screenshot.jpg %}  
+{% img left /images/posts/dailyhugs-screenshot.jpg Daily Hugs website %}  
 
 I released two websites this year:
 
@@ -63,7 +64,7 @@ I released two websites this year:
 
 ### Personal Achievements
 
-{% img right /images/posts/toyota-gt86.jpg %}
+{% img right /images/posts/toyota-gt86.jpg toyota gt86 %}
 
 * **Lost 16 kilo's (35 pounds) in 4.5 months:** I finally decided to do something about my weight. Ever since I got my own place I was gaining weight year after year. What made this even worse is that I hate to exercise. Turned out going to a dietitian was the solution for me which provided me with a good eating schedule and a list of allowed products (no exercise, yay!).
 * **Repaved our driveway** (about 180 square meter) and **build a new carport and shed** to store our garden tools.

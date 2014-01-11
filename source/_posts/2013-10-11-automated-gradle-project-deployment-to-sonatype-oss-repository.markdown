@@ -1,10 +1,11 @@
 ---
 layout: post
 title: "Automated Gradle project deployment to Sonatype OSS Repository"
+description: Explains the process to deploy your Gradle project to Sonatype's OSS repository and Maven Central
 date: 2013-10-11 21:53
 comments: false
 categories: Gradle
-keywords: Gradle Sonatype OSS
+keywords: gradle, sonatype, oss, maven central
 ---
 
 This post will walk you through the steps to deploy your gradle project to the Sonatype OSS staging repository.
