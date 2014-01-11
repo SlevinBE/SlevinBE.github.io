@@ -9,9 +9,9 @@
   <meta name="author" content="Yennick Trevels">
 
     
-    <meta name="description" content="Yennick is a Technical Business Consultant based in Belgium, who provides technical advice and implements software solutions based on best practices.">
+    <meta name="description" content="Gives an overview of how you can structure a fat client JavaFx application">
     
-    <meta name="keywords" content="JavaFx architecture">
+    <meta name="keywords" content="javafx, fat client, architecture, rich client, view layer, application logic, business logic, state, service, dependency injection, view, mediator, command pattern, service, model, guice">
 
   <!-- http://t.co/dKP3o1e -->
 
@@ -130,7 +130,7 @@ This serie of articles will try to remedy that by showing you one of many ways t
 
 <p>The diagram below shows the different components and layers in my architecture. The arrows indicate the dependencies.</p>
 
-<p><img src="/images/posts/javafx-structure-overview.png" /></p>
+<p><img src="/images/posts/javafx-structure-overview.png" title="layers overview" /></p>
 
 <p><strong>View:</strong> This is where the JavaFx components are used to build the UI.<br />
 <strong>Mediator:</strong> The mediator facilitates the communication between the view and the application logic layer. This is why it&rsquo;s both included in the view layer as the application logic layer. This layer should not contain application logic, it&rsquo;s just a postman who receives calls from the view and delegates them to the application logic layer and vise versa.<br />
@@ -140,7 +140,7 @@ This serie of articles will try to remedy that by showing you one of many ways t
 
 <p>The diagram below shows a sample flow of an application. In this case the user clicked on a button to delete a contact in a list.</p>
 
-<p><img src="/images/posts/javafx-structure-flow.png" /></p>
+<p><img src="/images/posts/javafx-structure-flow.png" title="communication flow between layers" /></p>
 
 <ol>
   <li>The view asks the mediator to delete the item by calling the deleteContact(contact) method on the IContactListMediator interface.</li>

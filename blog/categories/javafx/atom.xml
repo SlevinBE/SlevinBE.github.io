@@ -4,7 +4,7 @@
   <title><![CDATA[Category: JavaFx | Yennick Trevels]]></title>
   <link href="http://www.yennicktrevels.com/blog/categories/javafx/atom.xml" rel="self"/>
   <link href="http://www.yennicktrevels.com/"/>
-  <updated>2013-12-29T14:20:15+01:00</updated>
+  <updated>2014-01-11T15:21:12+01:00</updated>
   <id>http://www.yennicktrevels.com/</id>
   <author>
     <name><![CDATA[Yennick Trevels]]></name>
@@ -771,7 +771,7 @@ This serie of articles will try to remedy that by showing you one of many ways t
 
 <p>The diagram below shows the different components and layers in my architecture. The arrows indicate the dependencies.</p>
 
-<p><img src="/images/posts/javafx-structure-overview.png"></p>
+<p><img src="/images/posts/javafx-structure-overview.png" title="layers overview" ></p>
 
 <p><strong>View:</strong> This is where the JavaFx components are used to build the UI.<br />
 <strong>Mediator:</strong> The mediator facilitates the communication between the view and the application logic layer. This is why it&rsquo;s both included in the view layer as the application logic layer. This layer should not contain application logic, it&rsquo;s just a postman who receives calls from the view and delegates them to the application logic layer and vise versa.<br />
@@ -781,7 +781,7 @@ This serie of articles will try to remedy that by showing you one of many ways t
 
 <p>The diagram below shows a sample flow of an application. In this case the user clicked on a button to delete a contact in a list.</p>
 
-<p><img src="/images/posts/javafx-structure-flow.png"></p>
+<p><img src="/images/posts/javafx-structure-flow.png" title="communication flow between layers" ></p>
 
 <ol>
   <li>The view asks the mediator to delete the item by calling the deleteContact(contact) method on the IContactListMediator interface.</li>

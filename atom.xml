@@ -4,7 +4,7 @@
   <title><![CDATA[Yennick Trevels]]></title>
   <link href="http://www.yennicktrevels.com/atom.xml" rel="self"/>
   <link href="http://www.yennicktrevels.com/"/>
-  <updated>2013-12-29T14:20:15+01:00</updated>
+  <updated>2014-01-11T15:21:12+01:00</updated>
   <id>http://www.yennicktrevels.com/</id>
   <author>
     <name><![CDATA[Yennick Trevels]]></name>
@@ -59,11 +59,11 @@ So without further ado, my list of achievements of 2013.</p>
   <li><strong>Version 0.8:</strong> In this release I completely overhauled the FlexUnit integration, which was one of the pain points of GradleFx.</li>
 </ul>
 
-<p><img src="http://www.yennicktrevels.com/images/posts/gradlefx-2013-downloads-chart.png" /></p>
+<p><img src="http://www.yennicktrevels.com/images/posts/gradlefx-2013-downloads-chart.png" title="GradleFx downloads chart" /></p>
 
 <h4 id="websites">Websites</h4>
 
-<p><img class="left" src="http://www.yennicktrevels.com/images/posts/dailyhugs-screenshot.jpg" />  </p>
+<p><img class="left" src="http://www.yennicktrevels.com/images/posts/dailyhugs-screenshot.jpg" title="Daily Hugs website" />  </p>
 
 <p>I released two websites this year:</p>
 
@@ -80,7 +80,7 @@ In the end this site turned out great for my parents since they can now manage t
 
 <h3 id="personal-achievements">Personal Achievements</h3>
 
-<p><img class="right" src="http://www.yennicktrevels.com/images/posts/toyota-gt86.jpg" /></p>
+<p><img class="right" src="http://www.yennicktrevels.com/images/posts/toyota-gt86.jpg" title="toyota gt86" /></p>
 
 <ul>
   <li><strong>Lost 16 kilo&rsquo;s (35 pounds) in 4.5 months:</strong> I finally decided to do something about my weight. Ever since I got my own place I was gaining weight year after year. What made this even worse is that I hate to exercise. Turned out going to a dietitian was the solution for me which provided me with a good eating schedule and a list of allowed products (no exercise, yay!).</li>
@@ -936,7 +936,7 @@ This serie of articles will try to remedy that by showing you one of many ways t
 
 <p>The diagram below shows the different components and layers in my architecture. The arrows indicate the dependencies.</p>
 
-<p><img src="http://www.yennicktrevels.com/images/posts/javafx-structure-overview.png" /></p>
+<p><img src="http://www.yennicktrevels.com/images/posts/javafx-structure-overview.png" title="layers overview" /></p>
 
 <p><strong>View:</strong> This is where the JavaFx components are used to build the UI.<br />
 <strong>Mediator:</strong> The mediator facilitates the communication between the view and the application logic layer. This is why it&rsquo;s both included in the view layer as the application logic layer. This layer should not contain application logic, it&rsquo;s just a postman who receives calls from the view and delegates them to the application logic layer and vise versa.<br />
@@ -946,7 +946,7 @@ This serie of articles will try to remedy that by showing you one of many ways t
 
 <p>The diagram below shows a sample flow of an application. In this case the user clicked on a button to delete a contact in a list.</p>
 
-<p><img src="http://www.yennicktrevels.com/images/posts/javafx-structure-flow.png" /></p>
+<p><img src="http://www.yennicktrevels.com/images/posts/javafx-structure-flow.png" title="communication flow between layers" /></p>
 
 <ol>
   <li>The view asks the mediator to delete the item by calling the deleteContact(contact) method on the IContactListMediator interface.</li>
