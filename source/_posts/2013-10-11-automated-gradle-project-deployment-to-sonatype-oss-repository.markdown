@@ -15,11 +15,11 @@ This post will walk you through the steps to deploy your gradle project to the S
 ### PREREQUISITES
 
 * Minimum Gradle 1.0 milestone 5
-* Gpg4zin, you can find the installer on this website: http://www.gpg4win.org/
+* Gpg4zin, you can find the installer on this website: [http://www.gpg4win.org/](http://www.gpg4win.org/)
 
 ### CONFIGURING YOUR BUILD.GRADLE FILE
 First you'll need to configure your build script (build.gradle file). A full working build script of my GradleFx project can be found here:  
-https://github.com/GradleFx/GradleFx/blob/develop/build.gradle
+[https://github.com/GradleFx/GradleFx/blob/develop/build.gradle](https://github.com/GradleFx/GradleFx/blob/develop/build.gradle)
 
 These are the steps:
 
@@ -125,11 +125,11 @@ Create a gradle properties file
 
 #### Register your project at Sonatype
 
-First you'll need to register your project at sonatype. Follow the "2. Sign Up" and "3. Create a JIRA ticket" sections on this page: https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide
+First you'll need to register your project at sonatype. Follow the "Create a ticket with Sonatype" section on this page: [http://central.sonatype.org/pages/ossrh-guide.html#create-a-ticket-with-sonatype](http://central.sonatype.org/pages/ossrh-guide.html#create-a-ticket-with-sonatype)
 
 #### Create a public key pair
 
-A public key pair is needed to sign your jar/pom files. To generate this we need to dive into command line. Follow the "Generate a key pair" and "Distributing your public key" sections on this page: https://docs.sonatype.org/display/Repository/How+To+Generate+PGP+Signatures+With+Maven
+A public key pair is needed to sign your jar/pom files. To generate this we need to dive into command line. Follow the "Generate a key pair" and "Distributing your public key" sections on this page: [http://blog.sonatype.com/2010/01/how-to-generate-pgp-signatures-with-maven](http://blog.sonatype.com/2010/01/how-to-generate-pgp-signatures-with-maven)  
 This will generate a key that will be stored on your computer and on sks-keyservers.net. Remember the password because there is no way to reset or restore it when you forget it.
 
 #### Create a gradle properties file
