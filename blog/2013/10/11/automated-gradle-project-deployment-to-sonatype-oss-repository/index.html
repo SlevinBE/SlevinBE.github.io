@@ -165,7 +165,7 @@ version = <span class="string"><span class="delimiter">'</span><span class="cont
 </pre></td>
   <td class="code"><pre>task javadocJar(<span class="key">type</span>: Jar, <span class="key">dependsOn</span>: javadoc) {
     classifier = <span class="string"><span class="delimiter">'</span><span class="content">javadoc</span><span class="delimiter">'</span></span>
-    from <span class="string"><span class="delimiter">'</span><span class="content">build/docs/javadoc</span><span class="delimiter">'</span></span>
+    from tasks.javadoc.destinationDir
 }
 
 task sourcesJar(<span class="key">type</span>: Jar) {

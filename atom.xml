@@ -4,7 +4,7 @@
   <title><![CDATA[Yennick Trevels]]></title>
   <link href="http://www.yennicktrevels.com/atom.xml" rel="self"/>
   <link href="http://www.yennicktrevels.com/"/>
-  <updated>2014-08-11T20:29:02+02:00</updated>
+  <updated>2014-10-23T19:56:13+02:00</updated>
   <id>http://www.yennicktrevels.com/</id>
   <author>
     <name><![CDATA[Yennick Trevels]]></name>
@@ -1344,7 +1344,7 @@ version = <span class="string"><span class="delimiter">'</span><span class="cont
 </pre></td>
   <td class="code"><pre>task javadocJar(<span class="key">type</span>: Jar, <span class="key">dependsOn</span>: javadoc) {
     classifier = <span class="string"><span class="delimiter">'</span><span class="content">javadoc</span><span class="delimiter">'</span></span>
-    from <span class="string"><span class="delimiter">'</span><span class="content">build/docs/javadoc</span><span class="delimiter">'</span></span>
+    from tasks.javadoc.destinationDir
 }
 
 task sourcesJar(<span class="key">type</span>: Jar) {
