@@ -39,7 +39,7 @@ Define tasks for source and javadoc jar generation. These jars are also required
 
 	task javadocJar(type: Jar, dependsOn: javadoc) {
 		classifier = 'javadoc'
-		from 'build/docs/javadoc'
+		from tasks.javadoc.destinationDir
 	}
 
 	task sourcesJar(type: Jar) {
